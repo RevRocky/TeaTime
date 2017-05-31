@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">TeaTime</string>
+    <string name="Tea">Tea</string>
+    <string name="title_activity_add_tea">Add New Tea</string>
+    <string name="first_steep_time">First Steep Time</string>
+    <string name="second_steep_time">Second Steep Time</string>
+    <string name="min_Temp">Min Temp (F)</string>
+    <string name="max_Temp">Max Temp (F)</string>
+    <string name="OK">OK</string>
+    <string name="Alert1">Enter More Information</string>
+    <string name="FirstSteep">Steep Time (1st)</string>
+    <string name="SecondSteep">Steep Time (2nd)</string>
+    <string name="SteepError">There\'s No Tea That Brews Instantly. Try Again</string>
+    <string name="GeneralInfoError">Please Enter All Required Information</string>
+    <string name="Brew">Brew</string>
+    <string name="TeaReady">Your Tea is Ready to Drink! Enjoy!</string>
+    <string name="EditTea">Editing Tea Information</string>
+</resources>
