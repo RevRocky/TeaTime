@@ -77,6 +77,10 @@ public class DatabaseActivity extends AppCompatActivity {
         switch (requestCode) {
             case (NEW_TEA_REQUEST):
                 updateTeaList();    // We don't actually care to
+                return;
+            case (EDIT_TEA_REQUEST):
+                updateTeaList();
+                return;
         }
     }
 

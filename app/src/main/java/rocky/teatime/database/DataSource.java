@@ -51,6 +51,8 @@ public class DataSource {
         dbHelper.close();
     }
 
+
+    //TODO: Check to see if returning the new instance of the tea object is even worth it...
     /**
      * Adds a new item to the database?
      * @param teaName The name of tea being added to the DB
@@ -81,6 +83,37 @@ public class DataSource {
         Tea newTea = readEntry(cursor);     // Creating a Tea object from our entry
         cursor.close();                     // ALWAYS close the pointer.
         return newTea;
+    }
+
+    /**
+     *
+     * @param id Id pertaining to the entry being edited
+     * @param teaName The name of tea being modified to the DB
+     * @param teaType The type of tea (an enum, thus an int)
+     * @param brewTime Brewtime of tea being added
+     * @param brewSecond Brew time on second steeping
+     * @param minTemp an integer
+     * @param maxTemp an Integer, nothing surprising
+     */
+    public void updateEntry(long id, String teaName, TeaType teaType, int brewTime, int brewSecond,
+                           int minTemp, int maxTemp) {
+        ContentValues values = new ContentValues();
+
+        // Again there's no real better way to deal with this other than 1-by-1
+        values.put(allColumns[1], teaName);
+        values.put(allColumns[2], teaType.ordinal());
+        values.put(allColumns[3], brewTime);
+        values.put(allColumns[4], brewSecond);
+        values.put(allColumns[5], minTemp);
+        values.put(allColumns[6], maxTemp);
+
+        database.update(DatabaseHelper.TABLE_TEAS, values, String.format("_id=%d", id), null);
+        /*Cursor cursor = database.query(DatabaseHelper.TABLE_TEAS, allColumns,
+                String.format("%s = %d", allColumns[0], id), null, null, null, null);
+        cursor.moveToFirst();   // Move our cursor
+        Tea newTea = readEntry(cursor);     // Creating a Tea object from our entry
+        cursor.close();                     // ALWAYS close the pointer.
+        return newTea; */
     }
 
     /**

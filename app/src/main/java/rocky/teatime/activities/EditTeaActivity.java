@@ -162,9 +162,10 @@ public class EditTeaActivity extends AddTeaActivity {
         int typeNum = (int) teaType.getSelectedItemId();
         teaBeingEdited.setType(typeNum);
 
-        teaBeingEdited.saveToDB(this);      // The reference to this is being passed in to be used as a context
+        teaBeingEdited.updateDBEntry(this);  // The reference to this is being passed in to be used as a context
 
         // Preparing to return to last activity
+        // TODO: Would it be worth checking for any changes.
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
