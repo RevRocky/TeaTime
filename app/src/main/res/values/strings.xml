@@ -15,4 +15,11 @@
     <string name="Brew">Brew</string>
     <string name="TeaReady">Your Tea is Ready to Drink! Enjoy!</string>
     <string name="EditTea">Editing Tea Information</string>
+
+    <string name="Settings">Settings</string>
+    <string name="Vibrate">Vibrate Mode</string>
+    <string name="Ferinheit">Ferinheit</string>
+    <string name="Celsius">Celsius</string>
+    <string name="Temperature">Temp. Scale</string>
+
 </resources>

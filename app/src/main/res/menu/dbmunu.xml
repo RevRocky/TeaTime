@@ -4,6 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/settings"
+        android:title="@string/Settings" />
+    <item
         android:id="@+id/submitFeedback"
         android:title="Submit Feedback"
         app:showAsAction="never" />

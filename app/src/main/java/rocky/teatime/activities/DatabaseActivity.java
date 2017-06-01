@@ -54,6 +54,10 @@ public class DatabaseActivity extends AppCompatActivity {
             case R.id.addTeaChoice:
                 launchAddScreen();
                 return true;
+            case R.id.settings:
+                // Why have a method call here?
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
             default:
                 return super.onOptionsItemSelected(item);
         }

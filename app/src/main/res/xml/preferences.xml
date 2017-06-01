@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="vibrateAlarm"
+        android:title="@string/Vibrate" />
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/tempScales"
+        android:entryValues="@array/tempScalesInternal"
+        android:key="tempPreference"
+        android:summary="%s"
+        android:title="@string/Temperature" />
+</PreferenceScreen>
