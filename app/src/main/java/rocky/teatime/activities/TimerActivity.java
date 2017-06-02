@@ -31,6 +31,11 @@ public class TimerActivity extends AppCompatActivity {
     private Handler handler;
     TextView textProgress;
 
+    private final String START_KEY = "START_TIME";
+    private final String TIME_GONE = "TIME_GONE";
+    private final String PROGRESS_KEY = "PROGRESS";
+    private final String STEP_KEY = "STEP";
+
     /**
      * Handles the creation of the activity and establishing necessary brewTime
      * @param savedInstanceState A standard activity creation bundle... with a steep time
@@ -47,8 +52,16 @@ public class TimerActivity extends AppCompatActivity {
         // Reading the amount of time remaining from the bundle
         Bundle extras = getIntent().getExtras();
 
-        // If it is not empty read the brew time, otherwise do nothing.
-        if (extras != null) {
+        // Checking to see if this is a fresh activity or  we are resuming from an earlier one
+        if (savedInstanceState != null) {
+            startTime = savedInstanceState.getInt(START_KEY);
+            timeElapsed = (float) savedInstanceState.getDouble(TIME_GONE);
+            progress = (float) savedInstanceState.getDouble(PROGRESS_KEY);
+            step = (float) savedInstanceState.getDouble(STEP_KEY);
+
+            // TODO Explore best practises to launch the timer
+        }
+        else if (extras != null) {    // If it is not empty read the brew time, otherwise do nothing.
             startTime = extras.getInt("BrewTime");
             timeElapsed = 0.0f;
             progress = 0.0f;   // We start at 0 percent.
@@ -136,13 +149,18 @@ public class TimerActivity extends AppCompatActivity {
         }
     }
 
+    //TODO: Figure out how to best handle the thread that is running
+
     /**
-     * Ensures the activity is not restarted on screen rotation
-     * @param newConfig The new configuration of the screen
+     * Saves the current state of the timer so it can be recreated once we've rotated the screen
+     * @param newProgrammeState the outgoing programme state where we will save all our variables
      */
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        setContentView(R.layout.timer_layout);
+    public void onRestoreInstanceState(Bundle newProgrammeState) {
+        newProgrammeState.putInt(START_KEY, startTime);
+        newProgrammeState.putDouble(TIME_GONE, timeElapsed);
+        newProgrammeState.putDouble(PROGRESS_KEY, progress);
+        newProgrammeState.putDouble(STEP_KEY, step);
+        super.onRestoreInstanceState(newProgrammeState);
     }
 }
