@@ -41,7 +41,9 @@
         <activity
             android:name=".activities.TimerActivity"
             android:label="Brewing..."
-            android:theme="@style/Theme.AppCompat.Light"></activity>
+            android:theme="@style/Theme.AppCompat.Light"
+            android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
 
         <activity
             android:name=".activities.EditTeaActivity"

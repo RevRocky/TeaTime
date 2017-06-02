@@ -1,6 +1,7 @@
 package rocky.teatime.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -133,5 +134,15 @@ public class TimerActivity extends AppCompatActivity {
         else {
             return String.format("%d:0%d", minutes, seconds);   // Inserting a zero!
         }
+    }
+
+    /**
+     * Ensures the activity is not restarted on screen rotation
+     * @param newConfig The new configuration of the screen
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setContentView(R.layout.timer_layout);
     }
 }

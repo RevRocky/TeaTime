@@ -15,12 +15,11 @@
         android:inputType="textPersonName"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintRight_toLeftOf="@+id/imageIcon"
-        android:layout_marginRight="32dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginEnd="32dp" />
+        app:layout_constraintRight_toLeftOf="@+id/minTempEntry"
+        android:layout_marginRight="8dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <ImageButton
         android:id="@+id/imageIcon"
@@ -28,7 +27,7 @@
         android:layout_height="98dp"
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:onClick="takeTeaPic"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -40,14 +39,13 @@
         android:layout_height="31dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="12dp"
         android:entries="@array/teatypes"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/teaName"
-        app:layout_constraintRight_toLeftOf="@+id/imageIcon"
-        android:layout_marginRight="32dp"
-        app:layout_constraintHorizontal_bias="0.09"
-        android:layout_marginEnd="32dp" />
+        app:layout_constraintRight_toLeftOf="@+id/minTempEntry"
+        android:layout_marginRight="8dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <Spinner
         android:id="@+id/minuteSpinnerOne"
@@ -92,9 +90,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/FirstSteep"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="54dp"
         app:layout_constraintTop_toBottomOf="@+id/imageIcon"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="259dp"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Spinner
@@ -118,17 +116,20 @@
         android:text=":"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="54dp"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintRight_toLeftOf="@+id/secondSpinner2"
-        android:layout_marginRight="8dp" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Spinner
         android:id="@+id/secondSpinner2"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:entries="@array/seconds"
         app:layout_constraintRight_toLeftOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/secondSinnerOne" />
@@ -140,62 +141,10 @@
         android:layout_marginTop="64dp"
         android:text="@string/SecondSteep"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="259dp"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <EditText
-        android:id="@+id/minTempEntry"
-        android:layout_width="70dp"
-        android:layout_height="0dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="22dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintHorizontal_bias="0.205"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/maxTempEntry"
-        app:layout_constraintTop_toBottomOf="@+id/minuteSpinner2" />
 
-    <EditText
-        android:id="@+id/maxTempEntry"
-        android:layout_width="70dp"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:inputType="number"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/secondSpinner2"
-        android:layout_marginRight="169dp"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="120dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/min_Temp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/minTempEntry"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="72dp"
-        android:layout_height="34dp"
-        android:text="@string/max_Temp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/minTempEntry"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="120dp"
-        app:layout_constraintVertical_bias="0.153"
-        android:layout_marginRight="169dp"
-        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -209,5 +158,53 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@android:drawable/ic_menu_save" />
+
+    <EditText
+        android:id="@+id/maxTempEntry"
+        android:layout_width="74dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintRight_toLeftOf="@+id/textView8"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="54dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView2" />
+
+    <EditText
+        android:id="@+id/minTempEntry"
+        android:layout_width="74dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/textView6"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/maxTempEntry"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/min_Temp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="48dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintRight_toLeftOf="@+id/imageIcon"
+        android:layout_marginRight="52dp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/max_Temp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="167dp"
+        app:layout_constraintRight_toLeftOf="@+id/imageIcon"
+        android:layout_marginRight="49dp" />
 
 </android.support.constraint.ConstraintLayout>
