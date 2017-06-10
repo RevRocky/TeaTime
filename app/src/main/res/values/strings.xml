@@ -22,4 +22,13 @@
     <string name="Celsius">Celsius</string>
     <string name="Temperature">Temp. Scale</string>
 
+    <string name="Black">Black</string>
+    <string name="Green">Green</string>
+    <string name="White">White</string>
+    <string name="Oolong">Oolong</string>
+    <string name="Puerh">Puerh</string>
+    <string name="Yellow">Yellow</string>
+    <string name="Herbal">Herbal</string>
+
+
 </resources>

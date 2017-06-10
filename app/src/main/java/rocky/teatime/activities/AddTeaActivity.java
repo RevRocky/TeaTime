@@ -32,7 +32,7 @@ import static android.graphics.BitmapFactory.decodeFile;
 public class AddTeaActivity extends AppCompatActivity {
 
     private final int PHOTO_REQUEST = 1;     // A request code for a photo
-    private String currentPhotoPath;         // Where the image will be stored
+    protected String currentPhotoPath;         // Where the image will be stored
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +114,7 @@ public class AddTeaActivity extends AppCompatActivity {
      * @return Returns a file object in the applications local directory
      * @throws IOException IOException will be thrown if there is an issue in creating the file.
      */
+    // TODO Add to it's own class along with other image manipulation methods
     private File createImageFile() throws IOException {
         // Creating an unique file name.
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -133,6 +134,7 @@ public class AddTeaActivity extends AppCompatActivity {
      * @param height Height of the image button
      * @return The image resized to fit within the button
      */
+    // TODO Put in it's own class and generalise the method
     private Bitmap prepareThumbnailFromFile(int width, int height) {
         // Getting the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -243,6 +245,15 @@ public class AddTeaActivity extends AppCompatActivity {
         }
         else {
             newTea.setBrewMax(-1);
+        }
+
+        // Ensuring the location of the picture is saved
+        if (currentPhotoPath == null) {
+            newTea.setPicLocation(Tea.NO_PICTURE_FLAG);
+        }
+        else {
+            // We have a picture
+            newTea.setPicLocation(currentPhotoPath);
         }
 
         //Finally we extract the type of the tea from the spinner

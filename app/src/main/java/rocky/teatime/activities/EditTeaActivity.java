@@ -1,10 +1,13 @@
 package rocky.teatime.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import rocky.teatime.R;
@@ -74,6 +77,13 @@ public class EditTeaActivity extends AddTeaActivity {
             if (temperatures[i] > -1) {
                 tempFields[i].setText(Integer.toString(temperatures[i]));
             }
+        }
+
+        // Now we handle the image!
+        if (!teaBeingEdited.getPicLocation().equals("null")) {
+            // If an image exists... open it.
+            ImageButton ourButton = (ImageButton)findViewById(R.id.imageIcon);
+            ourButton.setImageBitmap(BitmapFactory.decodeFile(teaBeingEdited.getPicLocation()));
         }
 
         // Lastly we handle the teaType selection
@@ -155,6 +165,14 @@ public class EditTeaActivity extends AddTeaActivity {
         }
         else {
             teaBeingEdited.setBrewMax(-1);
+        }
+
+        // Check to see if there's a picture. If so... save it.
+        if (currentPhotoPath == null) {
+            teaBeingEdited.setPicLocation(Tea.NO_PICTURE_FLAG);
+        }
+        else {
+            teaBeingEdited.setPicLocation(currentPhotoPath);
         }
 
         //Finally we extract the type of the tea from the spinner

@@ -1,11 +1,14 @@
 package rocky.teatime.database.TeaStuff;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import com.google.gson.Gson;
 
+import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
 
 /**
@@ -22,8 +25,10 @@ public class Tea {
     private int brewTimeSub;                     // Brew Time for subsequent steepings! -1 If not set
     private int brewMin;                         // Min temp to brew the tea. -1 if not set
     private int brewMax;                         // Max temp to brew the tea. -1 If not set
+    private String picLocation;                  // Location of the picture on disk.
 
     public static String TEA_PAYLOAD_KEY = "Cargo";
+    public static String NO_PICTURE_FLAG = "NULL";
 
     /**
      * Creates a tea object from a given database entry
@@ -37,6 +42,7 @@ public class Tea {
         setBrewTimeSub(dbEntry.getInt(4));
         setBrewMin(dbEntry.getInt(5));
         setBrewMax(dbEntry.getInt(6));
+        setPicLocation(dbEntry.getString(7));
     }
 
     /**
@@ -53,7 +59,7 @@ public class Tea {
     public void saveToDB(Context programmeContext) {
         DataSource dbInterface = new DataSource(programmeContext);  // Creating our interface
         dbInterface.open();                                         // Opening the database
-        dbInterface.createEntry(name, type, brewTime, brewTimeSub, brewMin, brewMax);
+        dbInterface.createEntry(name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation);
         dbInterface.close();                                        // Closing the database
     }
 
@@ -64,7 +70,7 @@ public class Tea {
     public void updateDBEntry(Context programmeContext) {
         DataSource dbInterface = new DataSource(programmeContext);  // Creating our interface
         dbInterface.open();                                         // Opening the database
-        dbInterface.updateEntry(id, name, type, brewTime, brewTimeSub, brewMin, brewMax);
+        dbInterface.updateEntry(id, name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation);
         dbInterface.close();                                        // Closing the database
     }
 
@@ -107,6 +113,27 @@ public class Tea {
 
     public TeaType getType() {
         return type;
+    }
+    Resources stringResources = Resources.getSystem();  // Allowing us to get our string values
+    public String getTypeName() {
+        switch (type) {
+            case BLACK:
+                return stringResources.getString(R.string.Black);
+            case GREEN:
+                return stringResources.getString(R.string.Green);
+            case WHITE:
+                return stringResources.getString(R.string.White);
+            case YELLOW:
+                return stringResources.getString(R.string.Yellow);
+            case OOLONG:
+                return stringResources.getString(R.string.Oolong);
+            case PUERH:
+                return stringResources.getString(R.string.Puerh);
+            case HERBAL:
+                return stringResources.getString(R.string.Herbal);
+            default:
+                return "NULL";  // Null if we can not find a type.
+        }
     }
 
     /**
@@ -152,6 +179,14 @@ public class Tea {
 
     public void setBrewMax(int brewMax) {
         this.brewMax = brewMax;
+    }
+
+    public String getPicLocation() {
+        return picLocation;
+    }
+
+    public void setPicLocation(String picLocation) {
+        this.picLocation = picLocation;
     }
 
     /**

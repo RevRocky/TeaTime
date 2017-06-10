@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="160dp"
+    android:layout_margin="2.0dip"
+    android:background="?attr/selectableItemBackground">
+
+    <FrameLayout
+        android:id="@+id/tea_content_grid"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <rocky.teatime.widgets.SquareImageView
+                android:id="@+id/teaImage"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.58"
+                android:scaleType="fitCenter"
+                android:src="@drawable/generic_tea_img" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.58"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/gridFooter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="vertical"
+                    android:paddingLeft="16.0dip"
+                    android:paddingRight="16.0dip">
+
+                    <TextView
+                        android:id="@+id/tea_name_grid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                    <TextView
+                        android:id="@+id/tea_style_grid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_action_more_vert" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground" />
+
+</FrameLayout>
