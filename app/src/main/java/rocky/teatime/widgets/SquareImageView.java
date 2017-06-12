@@ -28,6 +28,15 @@ public class SquareImageView extends AppCompatImageView {
     }
 
     /**
+     * A two argument constructor where the context nd additional attributes are supplied
+     * @param context Application context
+     * @param attributes Additional attributes important in establishing the view
+     */
+    public SquareImageView(Context context, AttributeSet attributes) {
+        super(context, attributes);
+    }
+
+    /**
      * Ensures that the image displayed is always a square
      * @param widthMeasureSpec
      * @param heightMeasureSpec

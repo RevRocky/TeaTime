@@ -31,14 +31,16 @@ public class GridVisualiser extends DatabaseVisualiser {
      * Inflates the teaGrid layout and returns a new ItemHolder object representing the new view
      * created
      * @param viewGroup The parent viewgroup of the grid items
-     * @param someInt Some integer. It's not really... used. Represents which object in the array
+     * @param viewType Some integer. It's not really... used. Represents which object in the array
      *                we are dealing with.
      * @return An ItemHolder object representing the view that was created
      */
-    public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int viewTtpe) {
+    public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.tea_grid, viewGroup,
-                false);
-        return new ItemHolder(view);
+                    false);
+        ItemHolder itemHolster = new ItemHolder(view);
+        return itemHolster;
+
     }
 
     /**
@@ -52,16 +54,14 @@ public class GridVisualiser extends DatabaseVisualiser {
         final Tea currentTea = teaList.get(dbPosition);
         // Setting itemholder attributes!
         itemHolder.getName().setText(currentTea.getName());
-        itemHolder.getVariety().setText(currentTea.getTypeName());
+        itemHolder.getVariety().setText(currentTea.getType().name());
 
-        if (currentTea.getPicLocation() == null) {
-            // Fitting the generic image to the view if there is none
-            ImageHelper.fitImagetoView(itemHolder.getTeaPic(), Resources.getSystem(),
-                    R.drawable.generic_tea_img);
+        // If there is an image we should display it. Otherwise the default image wil display on its
+        // own
+        if (!currentTea.getPicLocation().equals("NULL")) {
+            ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
-        else {
-            ImageHelper.fitImagetoView(itemHolder.getTeaPic(), currentTea.getPicLocation());
-        }
+
     }
 
 }

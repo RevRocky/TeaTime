@@ -127,8 +127,8 @@ public class DatabaseActivity extends AppCompatActivity {
             recyclerView.setAdapter(visualiser);
             dbHelper.close();
         }
-        catch (NullPointerException e) {
-            Log.e("Null Ptr Exception", "Database does not yet exist");
+        catch (Exception | Error e) {
+            e.printStackTrace();
         }
     }
 }

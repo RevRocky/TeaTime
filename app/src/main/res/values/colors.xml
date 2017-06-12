@@ -3,4 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="blackTea">#770505</color>
+    <color name="greenTea">#12a81c</color>
+    <color name="whiteTea">#ffe7a5</color>
+    <color name="oolongTea">#235620</color>
+    <color name="puerhTea">#490404</color>
+    <color name="yellowTea">#bf9c1e</color>
+    <color name="herbalTea">#f99f9f</color>
 </resources>
