@@ -1,14 +1,17 @@
 package rocky.teatime.database.TeaStuff;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 
 import com.google.gson.Gson;
 
 import rocky.teatime.R;
+import rocky.teatime.TeaTime;
 import rocky.teatime.database.DataSource;
 
 /**
@@ -49,7 +52,6 @@ public class Tea {
      * Initialises an empty tea object
      */
     public Tea() {
-        return;
     }
 
     /**
@@ -111,6 +113,7 @@ public class Tea {
         this.name = name;
     }
 
+    // TODO: Flagged for deletion
     public TeaType getType() {
         return type;
     }
@@ -133,6 +136,36 @@ public class Tea {
                 return stringResources.getString(R.string.Herbal);
             default:
                 return "NULL";  // Null if we can not find a type.
+        }
+    }
+
+    /**
+     * Returns the colour resource correspinding with the type of tea it is.
+     * @return The id of the colour resource of the tea in question
+     */
+    public int getColour() {
+        // Getting the current application context as it is needed to call most up to date colour retrieval
+        // methods
+        Context appContext = TeaTime.getAppContext();
+
+        switch (type) {
+            case BLACK:
+                return ContextCompat.getColor(appContext, R.color.blackTea);
+            case GREEN:
+                return ContextCompat.getColor(appContext, R.color.greenTea);
+            case WHITE:
+                return ContextCompat.getColor(appContext, R.color.whiteTea);
+            case YELLOW:
+                return ContextCompat.getColor(appContext, R.color.yellowTea);
+            case OOLONG:
+                return ContextCompat.getColor(appContext, R.color.oolongTea);
+            case PUERH:
+                return ContextCompat.getColor(appContext, R.color.puerhTea);
+            case HERBAL:
+                return ContextCompat.getColor(appContext, R.color.herbalTea);
+            default:
+                // Should never be called but if need be we'll default to black tea
+                return ContextCompat.getColor(appContext, R.color.blackTea);
         }
     }
 

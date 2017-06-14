@@ -11,6 +11,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -53,6 +56,9 @@ public class DatabaseActivity extends AppCompatActivity {
         // Opening our database helper
         dbHelper = new DataSource(this);
         updateTeaList();
+
+        // Registering our recycler view for a context menu
+        registerForContextMenu(recyclerView);
     }
 
     /**
@@ -87,11 +93,73 @@ public class DatabaseActivity extends AppCompatActivity {
     }
 
     /**
+     * A central clearing house for all context menu options
+     * @param item Menu item selected
+     * @return True if operation is successful
+     */
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int position = -1;  // Initialising to an impossible value
+
+        // Attempt to retrieve position
+        try {
+            position = visualiser.getPosition();
+        }
+        catch (Exception e) {
+            Log.d("ERROR WITH CONTEXT MENU", e.getLocalizedMessage(),
+                    e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.editTeaOption:
+                launchEditScreen(visualiser.getTea(position));
+                return true;
+            case R.id.brewTeaOption:
+                launchBrewScreen(visualiser.getTea(position));
+                return true;
+            default:
+                // Functionality not implemented yet. So make toast
+                Toast.makeText(this, "Feature Not Implemented", Toast.LENGTH_SHORT);
+                return true;
+        }
+    }
+
+    /**
      * Launches the add tea screen!
      */
     public void launchAddScreen() {
         Intent addTeaIntent = new Intent(this, AddTeaActivity.class);
         startActivityForResult(addTeaIntent, NEW_TEA_REQUEST);
+    }
+
+    /**
+     * Launches the edit tea activity
+     * @param teaToEdit The tea object we wish to edit
+     */
+    private void launchEditScreen(Tea teaToEdit) {
+        Intent editIntent = new Intent(this, EditTeaActivity.class);
+        editIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(teaToEdit, Tea.class));
+        startActivityForResult(editIntent, DatabaseActivity.EDIT_TEA_REQUEST);
+    }
+
+    /**
+     * Launches the tea brew timer. If two times are present for the tea, it asks the user which
+     * steeping the tea is.
+     * @param teaToBrew Tea we wish to brew!
+     */
+    private void launchBrewScreen(Tea teaToBrew) {
+        Intent timerIntent = new Intent(this, TimerActivity.class);
+
+        // If the there is a second brew time... create alert for the user
+        if (teaToBrew.getBrewTimeSub() > 0) {
+            // TODO Create alert so user can pick. For now defaulting to first time
+            // for testing purposes
+            timerIntent.putExtra("BrewTime", teaToBrew.getBrewTime());
+        }
+        else {
+            timerIntent.putExtra("BrewTime", teaToBrew.getBrewTime());
+        }
+        startActivity(timerIntent);     // Start the timer activity!
     }
 
     /**
@@ -126,6 +194,7 @@ public class DatabaseActivity extends AppCompatActivity {
             visualiser = new GridVisualiser(teaList, this);
             recyclerView.setAdapter(visualiser);
             dbHelper.close();
+
         }
         catch (Exception | Error e) {
             e.printStackTrace();

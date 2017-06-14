@@ -12,7 +12,9 @@
     <string name="SecondSteep">Steep Time (2nd)</string>
     <string name="SteepError">There\'s No Tea That Brews Instantly. Try Again</string>
     <string name="GeneralInfoError">Please Enter All Required Information</string>
-    <string name="Brew">Brew</string>
+    <string name="Brew">Brew Tea</string>
+    <string name="Edit">Edit Tea Information</string>
+    <string name="Delete">Delete Entry</string>
     <string name="TeaReady">Your Tea is Ready to Drink! Enjoy!</string>
     <string name="EditTea">Editing Tea Information</string>
 

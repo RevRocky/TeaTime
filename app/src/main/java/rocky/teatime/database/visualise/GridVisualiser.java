@@ -2,13 +2,18 @@ package rocky.teatime.database.visualise;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
 import rocky.teatime.R;
+import rocky.teatime.TeaTime;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.widgets.ImageHelper;
 import rocky.teatime.widgets.ItemHolder;
@@ -40,7 +45,6 @@ public class GridVisualiser extends DatabaseVisualiser {
                     false);
         ItemHolder itemHolster = new ItemHolder(view);
         return itemHolster;
-
     }
 
     /**
@@ -50,7 +54,7 @@ public class GridVisualiser extends DatabaseVisualiser {
      * @param dbPosition The position in the array that the current tea which were working on id
      *                   found.
      */
-    public void onBindViewHolder(ItemHolder itemHolder, int dbPosition) {
+    public void onBindViewHolder(ItemHolder itemHolder, final int dbPosition) {
         final Tea currentTea = teaList.get(dbPosition);
         // Setting itemholder attributes!
         itemHolder.getName().setText(currentTea.getName());
@@ -61,7 +65,18 @@ public class GridVisualiser extends DatabaseVisualiser {
         if (!currentTea.getPicLocation().equals("NULL")) {
             ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
+        // Setting the footer colour
+        itemHolder.setFooterColour(currentTea.getColour());
 
+        // Adding a listener so we can capture the position of the menu item if a user
+        // uses the context menu
+        itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(dbPosition);
+                return false;
+            }
+        });
     }
 
 }

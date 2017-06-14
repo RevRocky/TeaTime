@@ -32,6 +32,7 @@ import rocky.teatime.widgets.ItemHolder;
 public abstract class DatabaseVisualiser extends RecyclerView.Adapter<ItemHolder> {
     protected ArrayList<Tea> teaList;     // An array to hold our tea objects
     protected Context context;            // Current application context
+    private int position;                 // Reference to a given item's position in the database
 
     /**
      * A straightforward constructor supplying a list of teas and some application context
@@ -41,6 +42,17 @@ public abstract class DatabaseVisualiser extends RecyclerView.Adapter<ItemHolder
     public DatabaseVisualiser(ArrayList<Tea> list, Context context) {
         teaList = list;
         this.context = context;
+    }
+
+    /**
+     * Explicitly defined so that we don't have any nasty reference issues
+     * @param holder The particular item holder we are removing the onClickListener
+     *               from.
+     */
+    @Override
+    public void onViewRecycled(ItemHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
     }
 
     /**
@@ -79,5 +91,21 @@ public abstract class DatabaseVisualiser extends RecyclerView.Adapter<ItemHolder
     @Override
     public long getItemId(int pos) {
         return teaList.get(pos).getId();
+    }
+
+    /**
+     * Returns the current position of the DB visualiser object
+     * @return Current position of a visualiser object
+     */
+    public int getPosition(){
+        return position;
+    }
+
+    /**
+     * Enables us to set the current position of an item in the db
+     * @param position Position we wish to set
+     */
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
