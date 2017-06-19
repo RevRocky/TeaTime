@@ -1,6 +1,5 @@
 package rocky.teatime.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -19,6 +17,7 @@ import java.util.ArrayList;
 
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
+import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.database.visualise.DatabaseVisualiser;
 import rocky.teatime.database.visualise.GridVisualiser;
@@ -117,9 +116,11 @@ public class DatabaseActivity extends AppCompatActivity {
             case R.id.brewTeaOption:
                 launchBrewScreen(visualiser.getTea(position));
                 return true;
+            case R.id.deleteTeaOption:
+                deleteTea(visualiser.getTea(position));
             default:
                 // Functionality not implemented yet. So make toast
-                Toast.makeText(this, "Feature Not Implemented", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Feature Not Implemented", Toast.LENGTH_SHORT).show();
                 return true;
         }
     }
@@ -138,7 +139,7 @@ public class DatabaseActivity extends AppCompatActivity {
      */
     private void launchEditScreen(Tea teaToEdit) {
         Intent editIntent = new Intent(this, EditTeaActivity.class);
-        editIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(teaToEdit, Tea.class));
+        editIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(new JsonTea(teaToEdit), JsonTea.class));
         startActivityForResult(editIntent, DatabaseActivity.EDIT_TEA_REQUEST);
     }
 
@@ -160,6 +161,16 @@ public class DatabaseActivity extends AppCompatActivity {
             timerIntent.putExtra("BrewTime", teaToBrew.getBrewTime());
         }
         startActivity(timerIntent);     // Start the timer activity!
+    }
+
+    /**
+     * Removes a
+     * @param teaToDelete
+     */
+    private void deleteTea(Tea teaToDelete) {
+        // TODO: Ask user if the are really really sure
+        dbHelper.deleteEntry(teaToDelete);
+        updateTeaList();
     }
 
     /**

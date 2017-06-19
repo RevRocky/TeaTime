@@ -88,7 +88,7 @@ public class Tea {
 
         if (someBundle != null) {
             jsonTea = someBundle.getString(TEA_PAYLOAD_KEY);
-            newTea = new Gson().fromJson(jsonTea, Tea.class);
+            newTea = new Gson().fromJson(jsonTea, JsonTea.class).makeTea();
         }
         else {
             newTea = new Tea(); // If the bundle isn't attached simply return a null tea object
