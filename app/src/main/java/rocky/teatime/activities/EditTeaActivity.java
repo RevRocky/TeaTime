@@ -92,7 +92,7 @@ public class EditTeaActivity extends AddTeaActivity {
     }
 
     /**
-     * Takes an integer amount of seconds and returns a tuple with an equivalent amount of time in
+     * Takes an integer amount of seconds and returns a pair with an equivalent amount of time in
      * minutes/seconds.
      * @param seconds An integer containing an amount of seconds
      * @return A pair where the first value is an amount of minutes and the second value is the amount
