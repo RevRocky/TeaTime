@@ -155,10 +155,10 @@ public class DatabaseActivity extends AppCompatActivity {
         if (teaToBrew.getBrewTimeSub() > 0) {
             // TODO Create alert so user can pick. For now defaulting to first time
             // for testing purposes
-            timerIntent.putExtra("BrewTime", teaToBrew.getBrewTime());
+            timerIntent.putExtra(TimerActivity.START_KEY, teaToBrew.getBrewTime());
         }
         else {
-            timerIntent.putExtra("BrewTime", teaToBrew.getBrewTime());
+            timerIntent.putExtra(TimerActivity.START_KEY, teaToBrew.getBrewTime());
         }
         startActivity(timerIntent);     // Start the timer activity!
     }

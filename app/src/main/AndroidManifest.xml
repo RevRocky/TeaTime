@@ -2,15 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="rocky.teatime">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
-        android:name="rocky.teatime.TeaTime"
+        android:name=".TeaTime"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="rocky.teatime.fileprovider"
@@ -18,14 +25,15 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
-        <supports-screens android:smallScreens="true"
-            android:normalScreens="true"
+        <supports-screens
+            android:anyDensity="true"
             android:largeScreens="true"
-            android:xlargeScreens="true"
-            android:anyDensity="true" />
+            android:normalScreens="true"
+            android:smallScreens="true"
+            android:xlargeScreens="true" />
 
         <activity android:name=".activities.DatabaseActivity">
             <intent-filter>
@@ -37,38 +45,28 @@
         <activity
             android:name=".activities.AddTeaActivity"
             android:label="@string/title_activity_add_tea"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.TimerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="Brewing..."
-            android:theme="@style/Theme.AppCompat.Light"
-            android:configChanges="orientation|keyboardHidden|screenSize">
-        </activity>
-
+            android:theme="@style/Theme.AppCompat.Light"></activity>
         <activity
             android:name=".activities.EditTeaActivity"
             android:label="@string/EditTea"
-            android:theme="@style/Theme.AppCompat.Light"></activity>
-
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".activities.SettingsActivity"
             android:label="Modify Settings"
-            android:theme="@style/Theme.AppCompat.Light"></activity>
+            android:theme="@style/Theme.AppCompat.Light" />
 
-        <!--
-            Now we introduce the services!
-        -->
+        <!--             Now we introduce the services! -->
 
         <service
             android:name=".services.AlarmService"
-            android:exported="false"></service>
+            android:exported="false" />
 
+        <activity android:name=".activities.ViewTeaActivity"></activity>
     </application>
-
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
 
 </manifest>

@@ -17,6 +17,8 @@
     <string name="Delete">Delete Entry</string>
     <string name="TeaReady">Your Tea is Ready to Drink! Enjoy!</string>
     <string name="EditTea">Editing Tea Information</string>
+    <string name="Basics">Basics</string>
+    <string name="DetailedInfo">Tasting Notes</string>
 
     <string name="Settings">Settings</string>
     <string name="Vibrate">Vibrate Mode</string>
@@ -31,6 +33,13 @@
     <string name="Puerh">Puerh</string>
     <string name="Yellow">Yellow</string>
     <string name="Herbal">Herbal</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="BrewBetween">Brewing Range:</string>
+
+    <string name="Enjoy">Ready to Enjoy?</string>
 
 
 </resources>

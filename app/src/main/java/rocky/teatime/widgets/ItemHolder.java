@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
+import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.visualise.DatabaseVisualiser;
 import rocky.teatime.database.visualise.GridVisualiser;
 
 /**
@@ -23,9 +25,11 @@ public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView variety;
     private LinearLayout footer;
     private SquareImageView teaPic;
+    private Tea teaBeingShown;
 
     /**
      * Very basic constructor which sets up the real basics of the view plus assigns the onclick listener
+     * v
      * @param view
      */
     public ItemHolder(View view) {
@@ -60,7 +64,7 @@ public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     @Override
     public void onClick(View v) {
-        System.out.println("You clicked on me.");
+
     }
 
     /**

@@ -80,7 +80,7 @@ public abstract class DatabaseVisualiser extends RecyclerView.Adapter<ItemHolder
      * @return Returns reference to the requested tea object
      */
     public Tea getTea(int pos) {
-        return (Tea) teaList.get(pos);
+        return teaList.get(pos);
     }
 
     /**

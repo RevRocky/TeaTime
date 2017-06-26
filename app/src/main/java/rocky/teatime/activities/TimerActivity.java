@@ -31,7 +31,7 @@ public class TimerActivity extends AppCompatActivity {
     private Handler handler;
     TextView textProgress;
 
-    private final String START_KEY = "START_TIME";
+    public static String START_KEY = "START_TIME";
     private final String TIME_GONE = "TIME_GONE";
     private final String PROGRESS_KEY = "PROGRESS";
     private final String STEP_KEY = "STEP";
@@ -62,7 +62,7 @@ public class TimerActivity extends AppCompatActivity {
             // TODO Explore best practises to launch the timer
         }
         else if (extras != null) {    // If it is not empty read the brew time, otherwise do nothing.
-            startTime = extras.getInt("BrewTime");
+            startTime = extras.getInt(START_KEY);
             timeElapsed = 0.0f;
             progress = 0.0f;   // We start at 0 percent.
             step = (float) startTime * .01f;  // The amount of seconds in one percent!

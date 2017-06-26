@@ -1,6 +1,7 @@
 package rocky.teatime.database.visualise;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -10,10 +11,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
+import rocky.teatime.activities.ViewTeaActivity;
+import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.widgets.ImageHelper;
 import rocky.teatime.widgets.ItemHolder;
@@ -54,7 +59,7 @@ public class GridVisualiser extends DatabaseVisualiser {
      * @param dbPosition The position in the array that the current tea which were working on id
      *                   found.
      */
-    public void onBindViewHolder(ItemHolder itemHolder, final int dbPosition) {
+    public void onBindViewHolder(final ItemHolder itemHolder, final int dbPosition) {
         final Tea currentTea = teaList.get(dbPosition);
         // Setting itemholder attributes!
         itemHolder.getName().setText(currentTea.getName());
@@ -74,8 +79,25 @@ public class GridVisualiser extends DatabaseVisualiser {
             @Override
             public boolean onLongClick(View v) {
                 setPosition(dbPosition);
-                return false;
+                return true;
             }
+        });
+
+        // Setting an On Click listener which will take us to the view tea activity
+        itemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPosition(dbPosition);
+
+                // Preparing to launch the tea-view activity
+                Context appContext = TeaTime.getAppContext();
+                Intent viewTeaIntent = new Intent(appContext, ViewTeaActivity.class);
+                JsonTea jsonTea = new JsonTea(getTea(dbPosition));
+                viewTeaIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(jsonTea, JsonTea.class));
+                appContext.startActivity(viewTeaIntent);
+            }
+
+
         });
     }
 

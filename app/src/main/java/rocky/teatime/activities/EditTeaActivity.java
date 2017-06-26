@@ -1,7 +1,6 @@
 package rocky.teatime.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -14,6 +13,7 @@ import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.helpers.AlertHelper;
+import rocky.teatime.helpers.MiscHelper;
 
 /**
  * The EditTeaActivity is a class which... handles the editing of a TeaDB entry. For the most part
@@ -52,7 +52,7 @@ public class EditTeaActivity extends AddTeaActivity {
         // Handling the spinners
         Pair<Spinner, Spinner> spinners = new Pair<> ((Spinner) findViewById(R.id.minuteSpinnerOne),
                 (Spinner) findViewById(R.id.secondSinnerOne));
-        Pair<Integer, Integer> minSec = secondsToMinutes(teaBeingEdited.getBrewTime());
+        Pair<Integer, Integer> minSec = MiscHelper.secondsToMinutes(teaBeingEdited.getBrewTime());
         spinners.first.setSelection(minSec.first);
         spinners.second.setSelection(minSec.second);
 
@@ -61,7 +61,7 @@ public class EditTeaActivity extends AddTeaActivity {
             // NOTE: 0 is default brew time on the spinners so it's all good!
             spinners = new Pair<> ((Spinner) findViewById(R.id.minuteSpinner2),
                     (Spinner) findViewById(R.id.secondSpinner2));
-            minSec = secondsToMinutes(teaBeingEdited.getBrewTimeSub());
+            minSec = MiscHelper.secondsToMinutes(teaBeingEdited.getBrewTimeSub());
             spinners.first.setSelection(minSec.first);
             spinners.second.setSelection(minSec.second);
         }
@@ -89,19 +89,6 @@ public class EditTeaActivity extends AddTeaActivity {
         // Lastly we handle the teaType selection
         teaTypeSelect = (Spinner) findViewById(R.id.teaTypeSelect);
         teaTypeSelect.setSelection(teaBeingEdited.getType().ordinal());
-    }
-
-    /**
-     * Takes an integer amount of seconds and returns a pair with an equivalent amount of time in
-     * minutes/seconds.
-     * @param seconds An integer containing an amount of seconds
-     * @return A pair where the first value is an amount of minutes and the second value is the amount
-     * of seconds left over
-     */
-    private Pair<Integer, Integer> secondsToMinutes(int seconds) {
-        int minutes = seconds / 60;     // Sixty seconds in a minute
-        seconds %= 60;                  // Remaining seconds is seconds modulo 60
-        return new Pair<>(minutes, seconds);
     }
 
     @Override
