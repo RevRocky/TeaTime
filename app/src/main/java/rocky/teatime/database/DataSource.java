@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteAccessPermException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
@@ -121,6 +123,28 @@ public class DataSource {
      */
     private Tea readEntry(Cursor cursor) {
         return new Tea(cursor);    // Initialise a null Tea object
+    }
+
+    /**
+     * Retuerns the Tea object from the database with an ID matching that of the supplied ID.
+     * @param entryID ID corresponding to the tea which we aim to search for
+     * @return Tea object from the database with an ID matching that of the supplied parameter
+     * @throws SQLiteException if the no match to the query can be found. Unlikely to ever
+     * be thrown in practise.
+     */
+    public Tea getEntry(long entryID) throws SQLiteException {
+        Cursor cursor = database.query(DatabaseHelper.TABLE_TEAS, allColumns,
+                DatabaseHelper.COLUMN_ID + "=?", new String[] {String.valueOf(entryID)}, null,
+                null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            return readEntry(cursor);
+        }
+        else {
+            throw new SQLiteException(String.format("No Entry Could be Found Matching the ID %d",
+                                                                                            entryID));
+        }
     }
 
     /**

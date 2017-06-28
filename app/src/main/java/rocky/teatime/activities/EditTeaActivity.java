@@ -1,5 +1,6 @@
 package rocky.teatime.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -9,8 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.google.gson.Gson;
+
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
+import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.MiscHelper;
@@ -24,6 +28,19 @@ import rocky.teatime.helpers.MiscHelper;
 public class EditTeaActivity extends AddTeaActivity {
 
     private Tea teaBeingEdited;
+
+    public static final int EDIT_TEA_REQUEST = 50;
+
+
+    /**
+     * Launches the edit tea activity
+     * @param teaToEdit The tea object we wish to edit
+     */
+    public static void launchEditScreen(Tea teaToEdit, Activity sourceActivity) {
+        Intent editIntent = new Intent(sourceActivity, EditTeaActivity.class);
+        editIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(new JsonTea(teaToEdit), JsonTea.class));
+        sourceActivity.startActivityForResult(editIntent, EDIT_TEA_REQUEST);
+    }
 
     /**
      * Handles the basics of creating the activity

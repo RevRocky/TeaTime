@@ -5,10 +5,23 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="blackTea">#b71c1c</color>
+    <color name="blackTeaDark">#800f0f</color>
+
     <color name="greenTea">#2e7d32</color>
+    <color name="greenTeaDark">#1b5e20</color>
+
     <color name="whiteTea">#ffecb3</color>
+    <color name="whiteTeaDark">#ffe082</color>
+
     <color name="oolongTea">#6c8b2f</color>
+    <color name="oolongTeaDark">#558b2f</color>
+
     <color name="puerhTea">#3e2723</color>
+    <color name="puerhTeaDark">#3e2723</color>
+
     <color name="yellowTea">#a2971d</color>
+    <color name="yellowTeaDark">#827717</color>
+
     <color name="herbalTea">#ef9a9a</color>
+    <color name="herbalTeaDark">#e57373</color>
 </resources>

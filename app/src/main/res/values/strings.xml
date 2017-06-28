@@ -41,5 +41,7 @@
 
     <string name="Enjoy">Ready to Enjoy?</string>
 
+    <string name="DataBaseError">An Error Occurred Reading Updated Entry from Database.</string>
+
 
 </resources>

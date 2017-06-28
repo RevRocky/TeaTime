@@ -1,5 +1,7 @@
 package rocky.teatime.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +30,6 @@ public class DatabaseActivity extends AppCompatActivity {
     private final int GRID_WIDTH = 3;
 
     public final int NEW_TEA_REQUEST = 40; // A code given to the new tea request
-    public static final int EDIT_TEA_REQUEST = 50;
     private DataSource dbHelper;
 
     private RecyclerView recyclerView;      // The overall recycler view object
@@ -111,7 +112,7 @@ public class DatabaseActivity extends AppCompatActivity {
         }
         switch (item.getItemId()) {
             case R.id.editTeaOption:
-                launchEditScreen(visualiser.getTea(position));
+                EditTeaActivity.launchEditScreen(visualiser.getTea(position), this);
                 return true;
             case R.id.brewTeaOption:
                 launchBrewScreen(visualiser.getTea(position));
@@ -131,16 +132,6 @@ public class DatabaseActivity extends AppCompatActivity {
     public void launchAddScreen() {
         Intent addTeaIntent = new Intent(this, AddTeaActivity.class);
         startActivityForResult(addTeaIntent, NEW_TEA_REQUEST);
-    }
-
-    /**
-     * Launches the edit tea activity
-     * @param teaToEdit The tea object we wish to edit
-     */
-    private void launchEditScreen(Tea teaToEdit) {
-        Intent editIntent = new Intent(this, EditTeaActivity.class);
-        editIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(new JsonTea(teaToEdit), JsonTea.class));
-        startActivityForResult(editIntent, DatabaseActivity.EDIT_TEA_REQUEST);
     }
 
     /**
@@ -164,7 +155,7 @@ public class DatabaseActivity extends AppCompatActivity {
     }
 
     /**
-     * Removes a
+     * Removes the specified tea from the database
      * @param teaToDelete
      */
     private void deleteTea(Tea teaToDelete) {
@@ -184,8 +175,13 @@ public class DatabaseActivity extends AppCompatActivity {
             case (NEW_TEA_REQUEST):
                 updateTeaList();    // We don't actually care to
                 return;
-            case (EDIT_TEA_REQUEST):
+            case (EditTeaActivity.EDIT_TEA_REQUEST):
                 updateTeaList();
+                return;
+            case (ViewTeaActivity.VIEW_TEA_REQUEST) :
+                if (resultCode == ViewTeaActivity.DATABASE_CHANGE_FLAG) {
+                    updateTeaList();    // Changes have happened so we want to update the display
+                }
                 return;
         }
     }

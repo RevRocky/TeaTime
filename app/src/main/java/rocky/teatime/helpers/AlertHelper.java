@@ -35,6 +35,33 @@ public class AlertHelper {
     }
 
     /**
+     * Creates a simply one button alert. When the user acknoledges it, they will close the activity
+     * and it will return to the last activity on the stack with the correct return code.
+     * @param message Message we wish to display to the user.
+     * @param activityToKill Activity we desire to terminate
+     * @param exitCode Exit Code communicating the status under which the activity has terminated
+     */
+    public static void createActivityKillAlert(String message, final Activity activityToKill, final int exitCode) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activityToKill);
+        alertBuilder.setMessage(message);
+        alertBuilder.setCancelable(false);
+
+        // Constructing the buttons
+        alertBuilder.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent returnIntent = new Intent();
+                activityToKill.setResult(exitCode, returnIntent);
+                activityToKill.finish();
+                dialog.cancel();
+
+            }
+        });
+        AlertDialog newAlert = alertBuilder.create();
+        newAlert.show();
+    }
+
+    /**
      * Creates an alert which can be used to destroy a service corresponding to the supplied intent.
      * @param message The message to display in the alert.
      * @param applicationContext The context of the application when it calls this method!

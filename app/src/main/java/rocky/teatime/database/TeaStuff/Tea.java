@@ -170,6 +170,37 @@ public class Tea {
     }
 
     /**
+     * Returns a darker variant of the colour corresponding with the type of tea this is. This
+     * darker colour is mostly used to colour the status bar.
+     * @return Id of the darker variant of the colour associated with the tea in quwstion
+     */
+    public int getColourDark() {
+        // Getting the current application context as it is needed to call most up to date colour retrieval
+        // methods
+        Context appContext = TeaTime.getAppContext();
+
+        switch (type) {
+            case BLACK:
+                return ContextCompat.getColor(appContext, R.color.blackTeaDark);
+            case GREEN:
+                return ContextCompat.getColor(appContext, R.color.greenTeaDark);
+            case WHITE:
+                return ContextCompat.getColor(appContext, R.color.whiteTeaDark);
+            case YELLOW:
+                return ContextCompat.getColor(appContext, R.color.yellowTeaDark);
+            case OOLONG:
+                return ContextCompat.getColor(appContext, R.color.oolongTeaDark);
+            case PUERH:
+                return ContextCompat.getColor(appContext, R.color.puerhTeaDark);
+            case HERBAL:
+                return ContextCompat.getColor(appContext, R.color.herbalTeaDark);
+            default:
+                // Should never be called but if need be we'll default to black tea
+                return ContextCompat.getColor(appContext, R.color.blackTeaDark);
+        }
+    }
+
+    /**
      * Sets the tea type based on the supplied integer
      * @param typeVal An int which will correspond with a given value of the TeaType
      *                enum.

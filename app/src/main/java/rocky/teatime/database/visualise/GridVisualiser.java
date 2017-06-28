@@ -1,9 +1,11 @@
 package rocky.teatime.database.visualise;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -89,12 +91,21 @@ public class GridVisualiser extends DatabaseVisualiser {
             public void onClick(View v) {
                 setPosition(dbPosition);
 
-                // Preparing to launch the tea-view activity
-                Context appContext = TeaTime.getAppContext();
-                Intent viewTeaIntent = new Intent(appContext, ViewTeaActivity.class);
-                JsonTea jsonTea = new JsonTea(getTea(dbPosition));
-                viewTeaIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(jsonTea, JsonTea.class));
-                appContext.startActivity(viewTeaIntent);
+                // We should always take the branch under a standard environment as context is always
+                // instantiated by passing in "this" from the database activity.
+                if (context instanceof Activity) {
+                    Intent viewTeaIntent = new Intent(context, ViewTeaActivity.class);
+                    JsonTea jsonTea = new JsonTea(getTea(dbPosition));
+                    viewTeaIntent.putExtra(Tea.TEA_PAYLOAD_KEY, new Gson().toJson(jsonTea, JsonTea.class));
+
+                    // Starting the activity
+                    ((Activity) context).startActivityForResult(viewTeaIntent,
+                            ViewTeaActivity.VIEW_TEA_REQUEST);
+                }
+                else {
+                    Log.e("ERROR", "The context we have is not an instance of an Activity");
+                }
+
             }
 
 

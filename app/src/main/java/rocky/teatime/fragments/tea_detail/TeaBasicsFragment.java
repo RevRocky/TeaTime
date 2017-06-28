@@ -3,6 +3,7 @@ package rocky.teatime.fragments.tea_detail;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -153,5 +154,24 @@ public class TeaBasicsFragment extends Fragment {
 
     public Tea getTeaBeingViewed() {
         return teaBeingViewed;
+    }
+
+    /**
+     * Updates the teaBeingViewed field, if the two objects are not equivalent it will also ensure
+     * that each of the UI fields gets updated.
+     * @param newTeaBeingViewed New tea object which we are displaying.
+     */
+    public void setTeaBeingViewed(Tea newTeaBeingViewed) {
+        if (!newTeaBeingViewed.equals(teaBeingViewed)) {
+            // If they are equivalent we need not update any UI elements, just a new reference to the
+            // tea in question
+            teaBeingViewed = newTeaBeingViewed;
+        }
+        else {
+            // If any changes have been made then we must update the UI
+            teaBeingViewed = newTeaBeingViewed;
+            setPicture();
+            buildBrewFragment();
+        }
     }
 }
