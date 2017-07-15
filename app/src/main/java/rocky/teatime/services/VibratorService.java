@@ -1,21 +1,24 @@
 package rocky.teatime.services;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.os.Vibrator;
 
 import rocky.teatime.R;
 
 /**
- * A little service that handles playing the alarm until the user
- * shits it up
+ * A Woman's (or a particular type of Man's) Best Friend.
  * @author Rocky Petkov
  * @version Final
  */
-public class AlarmService extends Service {
+public class VibratorService extends Service {
 
-    MediaPlayer soundPlayer;
+    private static int vibrateLength = 500; // He likes it big
+
+    Vibrator discreetAlarm;
 
     /**
      * This method exists... because it needs to.
@@ -33,8 +36,7 @@ public class AlarmService extends Service {
      * Initialised the mediaplayer object with the desired wav file
      */
     public void onCreate() {
-        soundPlayer = MediaPlayer.create(this, R.raw.alarm_chime);
-        soundPlayer.setLooping(true);       // We want to loop the heck out of this!
+        discreetAlarm = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     /**
@@ -46,7 +48,7 @@ public class AlarmService extends Service {
      * would have bitter tea... And that is no good!
      */
     public int onStartCommand(Intent intent, int flags, int startID) {
-        soundPlayer.start();
+        discreetAlarm.vibrate(500);
         return START_STICKY;
     }
 
@@ -55,6 +57,6 @@ public class AlarmService extends Service {
      */
     @Override
     public void onDestroy() {
-        soundPlayer.stop();
+        discreetAlarm.cancel();
     }
 }

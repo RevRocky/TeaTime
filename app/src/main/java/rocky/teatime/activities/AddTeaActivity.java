@@ -3,20 +3,20 @@ package rocky.teatime.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,19 +25,37 @@ import java.util.List;
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
 import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;
+import rocky.teatime.helpers.ImageHelper;
+import rocky.teatime.helpers.MiscHelper;
+import rocky.teatime.helpers.SettingsHelper;
 
 import static android.graphics.BitmapFactory.decodeFile;
 
 public class AddTeaActivity extends AppCompatActivity {
 
     private final int PHOTO_REQUEST = 1;     // A request code for a photo
-    protected String currentPhotoPath;         // Where the image will be stored
+    protected String currentPhotoPath;       // Where the image will be stored
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_new_add_tea);
+        changeCaptions();
+    }
+
+    /**
+     * Checks if the user prefers metric temperatures. If they do, change the captions
+     */
+    protected void changeCaptions() {
+        boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
+
+        // Changing the captions if the user does not prefer imperial temperatures
+        if (!imperialTemperature) {
+            ((TextView) findViewById(R.id.minTempCaption)).setText(R.string.min_Temp_Cent);
+            ((TextView) findViewById(R.id.maxTempCaption)).setText(R.string.max_Temp_Cent);
+        }
     }
 
     /**
@@ -102,8 +120,16 @@ public class AddTeaActivity extends AppCompatActivity {
             // Ensuring the operation went off smoothly
             if (resultCode == RESULT_OK) {
                 ImageButton imgButton = (ImageButton) findViewById(R.id.imageIcon);
-                Bitmap thumbnail = prepareThumbnailFromFile(imgButton.getWidth(),
-                        imgButton.getHeight());
+
+
+                // Getting the width and height of the largest place we'd place this image
+                // NOTE: This is the screen in the viewTeaActivity
+                // TODO: This really ought to be thought of better so that it works with landscape mode.
+                Pair<Integer, Integer> biggestImgSize = new Pair<>(TeaBasicsFragment.getImageHeight(),
+                        MiscHelper.getScreenWidth(this));
+
+                Bitmap thumbnail = ImageHelper.saveImageAsSize(currentPhotoPath, biggestImgSize.first,
+                        biggestImgSize.second);
                 imgButton.setImageBitmap(thumbnail);
             }
         }
@@ -114,7 +140,6 @@ public class AddTeaActivity extends AppCompatActivity {
      * @return Returns a file object in the applications local directory
      * @throws IOException IOException will be thrown if there is an issue in creating the file.
      */
-    // TODO Add to it's own class along with other image manipulation methods
     private File createImageFile() throws IOException {
         // Creating an unique file name.
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -125,60 +150,6 @@ public class AddTeaActivity extends AppCompatActivity {
         // Saving the file on the hard disk
         currentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-    /**
-     * Prepares an appropriately sized bitmap thumbnail of the image which has just been
-     * taken
-     * @param width Width of the image button
-     * @param height Height of the image button
-     * @return The image resized to fit within the button
-     */
-    // TODO Put in it's own class and generalise the method
-    private Bitmap prepareThumbnailFromFile(int width, int height) {
-        // Getting the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        decodeFile(currentPhotoPath, bmOptions);
-        int imgW = bmOptions.outWidth;
-        int imgH = bmOptions.outHeight;
-
-        // Determine how much to scale the image by
-        int scaleFactor = Math.min(imgW/width, imgH/height);
-
-        // Decoding the image file to a bitmap sized to fill our view
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap smallImg =  BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
-        saveImage(smallImg);        // Save the thumbnail version over the original
-        return smallImg;
-    }
-
-    /**
-     * Saves a bitmap image to disk at currentPhotoPath as a JPEG image!
-     * @param image The image to be saved to disk.
-     */
-    private void saveImage(Bitmap image) {
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(currentPhotoPath);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, out);   // Actually saving the file
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if (out!= null) {
-                    out.close();    // Close the stream
-                }
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     // TODO: update for any changes in GUI layout that make a substantial difference upon
@@ -230,8 +201,17 @@ public class AddTeaActivity extends AppCompatActivity {
         // Not a required field so we can ignore it!
         currentField = (EditText) findViewById(R.id.minTempEntry);
         entry = currentField.getText().toString().trim();
-        if (checkField(entry)) {
+        boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
+
+        // Checking the field for validity!
+        boolean nonEmptyField = checkField(entry);
+
+        if (nonEmptyField && imperialTemperature) {
             newTea.setBrewMin(Integer.valueOf(entry));
+        }
+        else if (nonEmptyField) {   // We know the user prefers centigrade
+            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
+            newTea.setBrewMin(convertedTemp);
         }
         else {
             newTea.setBrewMin(-1);
@@ -240,12 +220,18 @@ public class AddTeaActivity extends AppCompatActivity {
         // Not a required field so we can ignore it!
         currentField = (EditText) findViewById(R.id.maxTempEntry);
         entry = currentField.getText().toString().trim();
-        if (checkField(entry)) {
+        nonEmptyField = checkField(entry);
+        if (nonEmptyField && imperialTemperature) {
             newTea.setBrewMax(Integer.valueOf(entry));
+        }
+        else if (nonEmptyField) {   // We know the user prefers centigrade
+            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
+            newTea.setBrewMax(convertedTemp);
         }
         else {
             newTea.setBrewMax(-1);
         }
+
 
         // Ensuring the location of the picture is saved
         if (currentPhotoPath == null) {

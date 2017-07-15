@@ -3,10 +3,13 @@ package rocky.teatime.database.TeaStuff;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
 
@@ -29,6 +32,8 @@ public class Tea {
     private int brewMin;                         // Min temp to brew the tea. -1 if not set
     private int brewMax;                         // Max temp to brew the tea. -1 If not set
     private String picLocation;                  // Location of the picture on disk.
+
+    public static long TEA_REMOVED_ID_FLAG = -505;   // A flag which we set if the tea has been removed from the DB
 
     public static String TEA_PAYLOAD_KEY = "Cargo";
     public static String NO_PICTURE_FLAG = "NULL";
@@ -75,6 +80,54 @@ public class Tea {
         dbInterface.updateEntry(id, name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation);
         dbInterface.close();                                        // Closing the database
     }
+
+    /**
+     * Asks the user if they are sure to remove the tea from the data base. This method only handles
+     * the display of the alert, the actual heavy lifting is done on the onPositiveButton() method
+     * @param activityContext The application context of the current activity
+     */
+    public void createTeaRemoveAlert(Context activityContext) {
+        // Due to the nature of this method (the choice of the button really quite mattering
+        // I will forgo placing this alert in the AlertHelper Class
+        Resources resources = activityContext.getResources();
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activityContext);
+        alertBuilder.setMessage(resources.getString(R.string.DeletionAffirmation));
+        alertBuilder.setCancelable(false);
+
+        // Constructing the buttons
+        alertBuilder.setPositiveButton(resources.getString(R.string.Yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();        // We just want to close our dialogue
+                removeDBEntry();
+            }
+        });
+
+        // Constructing the buttons
+        alertBuilder.setNegativeButton(resources.getString(R.string.No), new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();        // We just want to close our dialogue
+
+            }
+        });
+
+        AlertDialog newAlert = alertBuilder.create();
+        newAlert.show();
+    }
+
+    /**
+     * Removes the database entry corresponding to this Tea object
+     */
+    private void removeDBEntry() {
+        Context appContext = TeaTime.getAppContext();
+        DataSource dbInterface = new DataSource(appContext);
+        dbInterface.open();
+        dbInterface.deleteEntry(this);
+        dbInterface.close();    // TODO: I don't think we should have an issue of this not working.
+    }
+
+
 
     /**
      * Reads a tea object from a json string that has been serialised using Gson.
@@ -201,6 +254,45 @@ public class Tea {
     }
 
     /**
+     * Checks for equality between two tea objects
+     * @param otherObject Object with which we wish to compare our tea object
+     * @return True if the two teas have the same name, type, brewing parameters and picture,
+     * false otherwise.
+     */
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) return true;
+        if (otherObject == null || getClass() != otherObject.getClass()) return false;
+
+        Tea tea = (Tea) otherObject;
+
+        if (getBrewTime() != tea.getBrewTime()) return false;
+        if (getBrewTimeSub() != tea.getBrewTimeSub()) return false;
+        if (getBrewMin() != tea.getBrewMin()) return false;
+        if (getBrewMax() != tea.getBrewMax()) return false;
+        if (!getName().equals(tea.getName())) return false;
+        if (getType() != tea.getType()) return false;
+        return getPicLocation() != null ? getPicLocation().equals(tea.getPicLocation()) : tea.getPicLocation() == null;
+
+    }
+
+    /**
+     * Allows for basic hashing of a tea object.
+     * @return A hash code generated based upon the attributes of the tea
+     */
+    @Override
+    public int hashCode() {
+        int result = getName().hashCode();
+        result = 31 * result + getType().hashCode();
+        result = 31 * result + getBrewTime();
+        result = 31 * result + getBrewTimeSub();
+        result = 31 * result + getBrewMin();
+        result = 31 * result + getBrewMax();
+        result = 31 * result + (getPicLocation() != null ? getPicLocation().hashCode() : 0);
+        return result;
+    }
+
+    /**
      * Sets the tea type based on the supplied integer
      * @param typeVal An int which will correspond with a given value of the TeaType
      *                enum.
@@ -251,6 +343,13 @@ public class Tea {
 
     public void setPicLocation(String picLocation) {
         this.picLocation = picLocation;
+    }
+
+    /**
+     * Flags the tea object that it has been removed from the database.
+     */
+    public void flagAsRemoved() {
+        id = Tea.TEA_REMOVED_ID_FLAG;
     }
 
     /**

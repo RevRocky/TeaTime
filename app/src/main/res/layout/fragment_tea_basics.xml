@@ -24,7 +24,7 @@
             <ImageView
                 android:id="@+id/collapsing_tea_image"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="480dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/generic_tea_img"
                 app:layout_collapseMode="parallax"

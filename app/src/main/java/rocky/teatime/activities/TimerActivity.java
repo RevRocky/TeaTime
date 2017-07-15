@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 import rocky.teatime.R;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.NotificationHelper;
+import rocky.teatime.helpers.SettingsHelper;
 import rocky.teatime.services.AlarmService;
+import rocky.teatime.services.VibratorService;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
@@ -28,6 +31,7 @@ public class TimerActivity extends AppCompatActivity {
     private float timeElapsed;
     private float progress;       // Progress of brew as a percentage of time remaining
     private float step;
+
     private Handler handler;
     TextView textProgress;
 
@@ -125,8 +129,18 @@ public class TimerActivity extends AppCompatActivity {
      * @return Returns the intent associated with the alarm service created!
      */
     private Intent playAlarm() {
-        Intent alarmIntent = new Intent(this, AlarmService.class);
-        startService(alarmIntent);  // Should handle the construction and destruction of the service
+        Intent alarmIntent = null;
+        boolean vibratePreference = SettingsHelper.isVibrateMode();
+
+        // Does the user wish for their device to vibrate or not?
+        if (vibratePreference){
+            alarmIntent = new Intent(this, VibratorService.class);
+        }
+        else {
+            // User does not a vibrate based alarm
+            alarmIntent = new Intent(this, AlarmService.class);
+        }
+        startService(alarmIntent);
         return alarmIntent;
     }
 

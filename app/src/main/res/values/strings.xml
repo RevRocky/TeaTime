@@ -4,8 +4,13 @@
     <string name="title_activity_add_tea">Add New Tea</string>
     <string name="first_steep_time">First Steep Time</string>
     <string name="second_steep_time">Second Steep Time</string>
+
+    <!-- Temperatures -->
     <string name="min_Temp">Min Temp (F)</string>
     <string name="max_Temp">Max Temp (F)</string>
+    <string name="min_Temp_Cent">Min Temp (C)</string>
+    <string name="max_Temp_Cent">Max Temp (C)</string>
+
     <string name="OK">OK</string>
     <string name="Alert1">Enter More Information</string>
     <string name="FirstSteep">Steep Time (1st)</string>
@@ -22,10 +27,11 @@
 
     <string name="Settings">Settings</string>
     <string name="Vibrate">Vibrate Mode</string>
-    <string name="Ferinheit">Ferinheit</string>
+    <string name="Ferinheit">Fahrenheit</string>
     <string name="Celsius">Celsius</string>
     <string name="Temperature">Temp. Scale</string>
 
+    <!-- Tea Variates -->
     <string name="Black">Black</string>
     <string name="Green">Green</string>
     <string name="White">White</string>
@@ -34,6 +40,12 @@
     <string name="Yellow">Yellow</string>
     <string name="Herbal">Herbal</string>
 
+    <!-- Some Things to include in emails to the developer -->
+    <string name="devEmail">12mp81@queensu.ca</string>
+    <string name="defaultSubject">TEA TIME ISSUE: [Insert Issue Here]</string>
+    <string name="defaultBody">[Politely and thoroughly describe your issue here]</string>
+    <string name="emailChooserTitle">Select Your Preferred Email Client!</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -41,7 +53,13 @@
 
     <string name="Enjoy">Ready to Enjoy?</string>
 
+
+
     <string name="DataBaseError">An Error Occurred Reading Updated Entry from Database.</string>
 
+    <!-- Strings to Display when the User Wishes to Remove a Tea Object -->
+    <string name="DeletionAffirmation">Are You Sure You Wish to Remove this Tea from your App?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
 
 </resources>

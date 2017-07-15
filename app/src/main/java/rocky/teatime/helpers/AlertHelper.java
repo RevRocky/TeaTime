@@ -14,6 +14,7 @@ import rocky.teatime.R;
  * @version .1
  */
 public class AlertHelper {
+
     /**
      * Creates a simple alert displaying the message. Will likely be moved to it's own class later on.
      * @param message The message to display with the alert

@@ -1,14 +1,78 @@
-package rocky.teatime.widgets;
+package rocky.teatime.helpers;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import rocky.teatime.activities.AddTeaActivity;
+import rocky.teatime.widgets.SquareImageView;
+
+import static android.graphics.BitmapFactory.decodeFile;
+
 /**
- * A static class that assists in various tasks related to image manipulation!
+ * Created by rocky on 17-07-07.
  */
+
 public class ImageHelper {
+    /**
+     * Prepares an appropriately sized bitmap thumbnail of the image which has just been
+     * taken
+     * @param pathToFile Path to the image file on Disk
+     * @param width Width of the image button
+     * @param height Height of the image button
+     * @return The image resized to fit within the button
+     */
+    // TODO Put in it's own class and generalise the method
+    public static Bitmap saveImageAsSize(String pathToFile, int width, int height) {
+        // Getting the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        decodeFile(pathToFile, bmOptions);
+        int imgW = bmOptions.outWidth;
+        int imgH = bmOptions.outHeight;
+
+        // Determine how much to scale the image by
+        int scaleFactor = Math.min(imgW/width, imgH/height);
+
+        // Decoding the image file to a bitmap sized to fill our view
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap resizedImg =  BitmapFactory.decodeFile(pathToFile, bmOptions);
+        saveImage(pathToFile, resizedImg);        // Save the resized version over the original
+        return resizedImg;
+    }
+
+    /**
+     * Saves a bitmap image to disk at currentPhotoPath as a JPEG image!
+     * @param currentPhotoPath Photo path we wish to save the file to
+     * @param image The image to be saved to disk.
+     */
+    public static void saveImage(String currentPhotoPath, Bitmap image) {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(currentPhotoPath);
+            image.compress(Bitmap.CompressFormat.JPEG, 100, out);   // Actually saving the file
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                if (out!= null) {
+                    out.close();    // Close the stream
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * Returns a standard set of factory options which will ensure that image fits nicely within
@@ -45,17 +109,17 @@ public class ImageHelper {
         options.inJustDecodeBounds = false;
         // Decoding full size image
         try {
-            image = BitmapFactory.decodeFile(filePath, options);
+            image = decodeFile(filePath, options);
         } catch (OutOfMemoryError e) {    // Incase we run out of memory decoding the bitmap, this is for safety!
             options.inSampleSize = 2;
-            image = BitmapFactory.decodeFile(filePath, options);
+            image = decodeFile(filePath, options);
         } finally {
             // How much do we scale the image by
             int scaleFactor = Math.min(image.getWidth() / view.getWidth(),
                     image.getHeight() / view.getHeight());
             options.inSampleSize = scaleFactor;
 
-            Bitmap scaledImage = BitmapFactory.decodeFile(filePath, options);
+            Bitmap scaledImage = decodeFile(filePath, options);
             view.setImageBitmap(scaledImage);   // Setting the view to be the scaled image
         }
     }
@@ -93,11 +157,11 @@ public class ImageHelper {
         options.inJustDecodeBounds = false;
         // Decoding full size image
         try {
-            image = BitmapFactory.decodeFile(filePath, options);
+            image = decodeFile(filePath, options);
         }
         catch (OutOfMemoryError e) {    // Incase we run out of memory decoding the bitmap, this is for safety!
             options.inSampleSize = 2;
-            image = BitmapFactory.decodeFile(filePath, options);
+            image = decodeFile(filePath, options);
         }
         finally {
             view.setImageBitmap(image);   // Setting the view to be the scaled image

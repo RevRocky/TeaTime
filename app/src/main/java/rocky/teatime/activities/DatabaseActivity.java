@@ -3,7 +3,10 @@ package rocky.teatime.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -87,6 +90,10 @@ public class DatabaseActivity extends AppCompatActivity {
                 // Why have a method call here?
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
+                return true;
+            case R.id.submitFeedback:
+                launchEmailActivity();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -135,6 +142,19 @@ public class DatabaseActivity extends AppCompatActivity {
     }
 
     /**
+     * Launches an email app so the user can email me should anything be amiss with this programme!
+     */
+    private void launchEmailActivity() {
+        // Build the standard email header
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" +
+                getString(R.string.devEmail)));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.defaultSubject));
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.defaultBody));
+
+        startActivity(Intent.createChooser(emailIntent, getString(R.string.emailChooserTitle)));
+    }
+
+    /**
      * Launches the tea brew timer. If two times are present for the tea, it asks the user which
      * steeping the tea is.
      * @param teaToBrew Tea we wish to brew!
@@ -156,12 +176,14 @@ public class DatabaseActivity extends AppCompatActivity {
 
     /**
      * Removes the specified tea from the database
-     * @param teaToDelete
+     * @param teaToDelete Tea we wish to remove from the database
      */
     private void deleteTea(Tea teaToDelete) {
-        // TODO: Ask user if the are really really sure
-        dbHelper.deleteEntry(teaToDelete);
-        updateTeaList();
+        teaToDelete.createTeaRemoveAlert(this);
+
+        if (teaToDelete.getId() == Tea.TEA_REMOVED_ID_FLAG) {
+            updateTeaList();    // We only need to update the list if we've deleted something
+        }
     }
 
     /**

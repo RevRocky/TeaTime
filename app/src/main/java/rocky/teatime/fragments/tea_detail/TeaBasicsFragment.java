@@ -1,14 +1,9 @@
 package rocky.teatime.fragments.tea_detail;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,18 +14,13 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
 import rocky.teatime.activities.TimerActivity;
 import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
-import rocky.teatime.database.TeaStuff.TeaType;
 import rocky.teatime.helpers.MiscHelper;
-import rocky.teatime.widgets.ImageHelper;
+import rocky.teatime.helpers.SettingsHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +34,19 @@ public class TeaBasicsFragment extends Fragment {
     private Tea teaBeingViewed;
     private BrewTeaViewFragment brewingFragment;
     private View selfReferenceView;
+
+    // A Set of integers that communicates the size of the image object for each screen size
+    private static int XL_SCREEN_IMAGE_HEIGHT = 480;
+
+    /**
+     * Returns the image height used for the given screen size. This is so we know how big to make
+     * the image. For now, this simply returns the size used on a 5.5 inch screen.
+     * @return Image height used on the user's choice of phone screen
+     */
+    public static int getImageHeight() {
+        // TODO: Upon testing on other screen sizes, build into a case statement
+        return XL_SCREEN_IMAGE_HEIGHT;
+    }
 
     /**
      * This is a factory method meant to quickly establish the tea_basics fragment
@@ -109,6 +112,12 @@ public class TeaBasicsFragment extends Fragment {
         // entered, establish an on click listener
         for (i = 0; i < rawTimes.length; i ++) {
             if (rawTimes[i] > 0){
+
+                // Not worth doing a boolean check, we'll just purposefully set everything to be
+                // visible in this case
+                brewButtons[i].setVisibility(View.VISIBLE);
+                timeViews[i].setVisibility(View.VISIBLE);
+
                 minSecs = MiscHelper.secondsToMinutes(rawTimes[i]);
                 // Handling that pesky little thing where you have to have "0X" if the number of
                 // seconds is less than 10.
@@ -144,10 +153,15 @@ public class TeaBasicsFragment extends Fragment {
         // the user
         TextView[] tempViews = {brewingFragment.getMinTempView(), brewingFragment.getMaxTempView()};
         int[] brewTemps = {teaBeingViewed.getBrewMin(), teaBeingViewed.getBrewMax()};
+        boolean imperialTemperatures = SettingsHelper.isTemperatureFahrenheit();
+
         for (i = 0; i < tempViews.length; i++) {
             // TODO: When preferences are implemented, ensure this works with centigrade
-            if (brewTemps[i] > 0) {
-                tempViews[i].setText(String.format("%d", brewTemps[i]));
+            if (brewTemps[i] > 0 && imperialTemperatures) {
+                tempViews[i].setText(String.format("%d F", brewTemps[i]));
+            }
+            else if (brewTemps[i] > 0) {
+                tempViews[i].setText(String.format("%d C", MiscHelper.fahrenheitToCentigrade(brewTemps[i])));
             }
         }
     }
@@ -162,7 +176,8 @@ public class TeaBasicsFragment extends Fragment {
      * @param newTeaBeingViewed New tea object which we are displaying.
      */
     public void setTeaBeingViewed(Tea newTeaBeingViewed) {
-        if (!newTeaBeingViewed.equals(teaBeingViewed)) {
+
+        if (newTeaBeingViewed.equals(teaBeingViewed)) {
             // If they are equivalent we need not update any UI elements, just a new reference to the
             // tea in question
             teaBeingViewed = newTeaBeingViewed;

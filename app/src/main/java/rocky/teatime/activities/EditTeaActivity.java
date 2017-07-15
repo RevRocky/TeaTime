@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -18,6 +19,7 @@ import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.MiscHelper;
+import rocky.teatime.helpers.SettingsHelper;
 
 /**
  * The EditTeaActivity is a class which... handles the editing of a TeaDB entry. For the most part
@@ -51,6 +53,7 @@ public class EditTeaActivity extends AddTeaActivity {
         super.onCreate(savedInstanceState);
         teaBeingEdited = Tea.readFromBundle(getIntent().getExtras());
         setContentView(R.layout.content_new_add_tea);
+        changeCaptions();   // Check to see if we ought to change our captions.
         populateEntries();  // Using the tea object to populate the form!
     }
 
@@ -90,9 +93,15 @@ public class EditTeaActivity extends AddTeaActivity {
         int[] temperatures = {teaBeingEdited.getBrewMin(), teaBeingEdited.getBrewMax()};
 
         // Just in case I actually forgot how for loops work!
+        boolean imperialTemperatures = SettingsHelper.isTemperatureFahrenheit();
         for (int i = 0; i < tempFields.length; i++) {
-            if (temperatures[i] > -1) {
+            if (temperatures[i] > -1 && imperialTemperatures) {
                 tempFields[i].setText(Integer.toString(temperatures[i]));
+            }
+            else if (temperatures[i] > -1) {
+                // We know the user prefers centigrade
+                int centigradeTemp = MiscHelper.fahrenheitToCentigrade(temperatures[i]);
+                tempFields[i].setText(Integer.toString(centigradeTemp));
             }
         }
 
@@ -154,8 +163,19 @@ public class EditTeaActivity extends AddTeaActivity {
         // Not a required field so we can ignore it!
         currentField = (EditText) findViewById(R.id.minTempEntry);
         entry = currentField.getText().toString().trim();
-        if (checkField(entry)) {
+
+        // Getting temperature preference
+        boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
+
+        // Checking the field for validity!
+        boolean nonEmptyField = checkField(entry);
+
+        if (nonEmptyField && imperialTemperature) {
             teaBeingEdited.setBrewMin(Integer.valueOf(entry));
+        }
+        else if (nonEmptyField) {   // We know the user prefers centigrade
+            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
+            teaBeingEdited.setBrewMin(convertedTemp);
         }
         else {
             teaBeingEdited.setBrewMin(-1);
@@ -164,8 +184,13 @@ public class EditTeaActivity extends AddTeaActivity {
         // Not a required field so we can ignore it!
         currentField = (EditText) findViewById(R.id.maxTempEntry);
         entry = currentField.getText().toString().trim();
-        if (checkField(entry)) {
+        nonEmptyField = checkField(entry);
+        if (nonEmptyField && imperialTemperature) {
             teaBeingEdited.setBrewMax(Integer.valueOf(entry));
+        }
+        else if (nonEmptyField) {   // We know the user prefers centigrade
+            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
+            teaBeingEdited.setBrewMax(convertedTemp);
         }
         else {
             teaBeingEdited.setBrewMax(-1);

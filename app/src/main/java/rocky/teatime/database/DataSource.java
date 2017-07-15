@@ -47,6 +47,14 @@ public class DataSource {
     }
 
     /**
+     * Opens a read only version of our database.
+     * @throws SQLException If there is an issue obtaining the readable database.
+     */
+    public void openForRead() throws SQLException {
+        database = dbHelper.getReadableDatabase();
+    }
+
+    /**
      * Responsibly closes the database
      */
     public void close() {
@@ -139,9 +147,11 @@ public class DataSource {
 
         if (cursor != null) {
             cursor.moveToFirst();
-            return readEntry(cursor);
+            Tea teaToReturn = readEntry(cursor);
+            return teaToReturn;
         }
         else {
+            close();    // Got to be responsible now
             throw new SQLiteException(String.format("No Entry Could be Found Matching the ID %d",
                                                                                             entryID));
         }
@@ -178,5 +188,6 @@ public class DataSource {
         System.out.println(String.format("Entry with id %d has been deleted!", id));
         database.delete(DatabaseHelper.TABLE_TEAS, String.format("%s = %d", allColumns[0], id),
                 null);
+        tea.flagAsRemoved();
     }
 }

@@ -56,7 +56,7 @@ public class ViewTeaActivity extends AppCompatActivity {
      */
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.dbmunu, menu);
+        inflater.inflate(R.menu.tea_view_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,16 +114,19 @@ public class ViewTeaActivity extends AppCompatActivity {
 
     /**
      * Removes the selected tea from the database.
-     * @param teaToDelete
+     * @param teaToDelete Tea we wish to remove from the data base.
      */
     private void deleteTea(Tea teaToDelete) {
-        DataSource dbHelper = new DataSource(this);
-        dbHelper.deleteEntry(teaToDelete);
+        teaToDelete.createTeaRemoveAlert(this);
 
         // Notify the previous activity that we've made a change to the database and then quit
         Intent returnIntent = new Intent();
-        setResult(DATABASE_CHANGE_FLAG, returnIntent);
-        finish();
+
+        // If the tea has actually been deleted we will have raised a flag in the ID.
+        if (teaToDelete.getId() == Tea.TEA_REMOVED_ID_FLAG) {
+            setResult(DATABASE_CHANGE_FLAG, returnIntent);
+            finish();
+        }
     }
 
     /**
@@ -157,8 +160,11 @@ public class ViewTeaActivity extends AppCompatActivity {
     private Tea fetchEditedTeaObject() {
         long teaID = basicsFragment.getTeaBeingViewed().getId();    // Edited tea will always preserve the ID
         try {
-            DataSource dbHelper = new DataSource(this);                 // Getting a helper to access our database!
-            return dbHelper.getEntry(teaID);                            // Returning the new tea object stored in the database
+            DataSource dbHelper = new DataSource(this);             // Getting a helper to access our database!
+            dbHelper.open();
+            Tea teaFetched = dbHelper.getEntry(teaID);              // Returning the new tea object stored in the database
+            dbHelper.close();
+            return teaFetched;
         }
         catch (SQLiteException e) {
             Resources sysResources = Resources.getSystem();
@@ -185,4 +191,5 @@ public class ViewTeaActivity extends AppCompatActivity {
         }
         finish();
     }
+
 }

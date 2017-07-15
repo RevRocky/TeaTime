@@ -3,13 +3,8 @@ package rocky.teatime.database.visualise;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,11 +13,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import rocky.teatime.R;
-import rocky.teatime.TeaTime;
 import rocky.teatime.activities.ViewTeaActivity;
 import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
-import rocky.teatime.widgets.ImageHelper;
 import rocky.teatime.widgets.ItemHolder;
 
 /**
@@ -70,13 +63,14 @@ public class GridVisualiser extends DatabaseVisualiser {
         // If there is an image we should display it. Otherwise the default image wil display on its
         // own
         if (!currentTea.getPicLocation().equals("NULL")) {
-            ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
+            rocky.teatime.helpers.ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
         // Setting the footer colour
         itemHolder.setFooterColour(currentTea.getColour());
 
         // Adding a listener so we can capture the position of the menu item if a user
         // uses the context menu
+        //TODO: Figure out why this is no longer creating a context menu.
         itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
