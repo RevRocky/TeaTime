@@ -4,6 +4,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/sortByOption"
+        android:title="@string/SortBy">
+
+        <menu>
+            <item
+                android:id="@+id/TypeSort"
+                android:title="@string/Type"></item>
+            <item
+                android:id="@+id/AtoZSort"
+                android:title="@string/NameAZ"></item>
+            <item
+                android:id="@+id/ZtoASort"
+                android:title="@string/NameZA"></item>
+            <item
+                android:id="@+id/newestFirst"
+                android:title="@string/MostRecentlyAdded"></item>
+            <item
+                android:id="@+id/oldestFirst"
+                android:title="@string/LeastRecentlyAdded"></item>
+        </menu>
+
+    </item>
+    <item
         android:id="@+id/settings"
         android:title="@string/Settings" />
     <item

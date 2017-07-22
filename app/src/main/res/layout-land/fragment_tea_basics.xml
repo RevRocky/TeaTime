@@ -1,0 +1,57 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+          <!--
+               Set it up so that this can later be set to match the
+               colour of the tea. This may have to be done in code
+           -->
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary">
+
+            <ImageView
+                android:id="@+id/collapsing_tea_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/generic_tea_img"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--
+            This is where I'll fil in all the sexy details about the
+            tea in question
+        -->
+
+        <fragment
+            android:name="rocky.teatime.fragments.tea_detail.BrewTeaViewFragment"
+            android:id="@+id/tea_brew_fragment"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_brew_tea_view" />
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

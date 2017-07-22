@@ -25,6 +25,14 @@
     <string name="Basics">Basics</string>
     <string name="DetailedInfo">Tasting Notes</string>
 
+
+    <string name="SortBy">Sort By:</string>
+    <string name="Type">Type</string>
+    <string name="NameAZ">Name A-Z</string>
+    <string name="NameZA">Name Z-A</string>
+    <string name="MostRecentlyAdded">Most Recently Added</string>
+    <string name="LeastRecentlyAdded">First Added</string>
+
     <string name="Settings">Settings</string>
     <string name="Vibrate">Vibrate Mode</string>
     <string name="Ferinheit">Fahrenheit</string>
