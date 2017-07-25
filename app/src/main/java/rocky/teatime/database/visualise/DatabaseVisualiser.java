@@ -1,27 +1,10 @@
 package rocky.teatime.database.visualise;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-import rocky.teatime.R;
-import rocky.teatime.activities.DatabaseActivity;
-import rocky.teatime.activities.EditTeaActivity;
-import rocky.teatime.activities.TimerActivity;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.widgets.ItemHolder;
 

@@ -1,11 +1,8 @@
 package rocky.teatime.helpers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v4.util.Pair;
 import android.util.DisplayMetrics;
-
-import rocky.teatime.TeaTime;
 
 /**
  * A helper class which handles.... everything which doesn't really have a home

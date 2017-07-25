@@ -23,15 +23,12 @@ import java.util.Date;
 import java.util.List;
 
 import rocky.teatime.R;
-import rocky.teatime.database.DataSource;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.ImageHelper;
 import rocky.teatime.helpers.MiscHelper;
 import rocky.teatime.helpers.SettingsHelper;
-
-import static android.graphics.BitmapFactory.decodeFile;
 
 public class AddTeaActivity extends AppCompatActivity {
 

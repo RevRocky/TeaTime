@@ -2,7 +2,6 @@ package rocky.teatime.helpers;
 
 import android.preference.PreferenceManager;
 
-import rocky.teatime.R;
 import rocky.teatime.TeaTime;
 
 /**

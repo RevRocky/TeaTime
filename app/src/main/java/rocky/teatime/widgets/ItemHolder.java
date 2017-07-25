@@ -4,16 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
 import rocky.teatime.database.TeaStuff.Tea;
-import rocky.teatime.database.visualise.DatabaseVisualiser;
-import rocky.teatime.database.visualise.GridVisualiser;
 
 /**
  * Again much of the code for this comes from understanding the Timber music player project.

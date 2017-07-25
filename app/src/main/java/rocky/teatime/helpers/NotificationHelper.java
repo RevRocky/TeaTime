@@ -1,7 +1,6 @@
 package rocky.teatime.helpers;
 
 import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.support.v4.app.NotificationCompat;
 import rocky.teatime.R;
 
 import static android.support.v4.app.NotificationCompat.DEFAULT_ALL;
-import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 /**
  * A mostly static helper class that contains some methods which ease the

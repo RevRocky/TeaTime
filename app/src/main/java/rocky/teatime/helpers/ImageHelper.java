@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import rocky.teatime.activities.AddTeaActivity;
 import rocky.teatime.widgets.SquareImageView;
 
 import static android.graphics.BitmapFactory.decodeFile;
