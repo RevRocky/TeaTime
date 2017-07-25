@@ -101,9 +101,23 @@ public class TeaBasicsFragment extends Fragment {
      * to the user
      */
     public void buildBrewFragment() {
+        // Setting up the fields to do with the timer
+        establishTimerFields();
+
+        // Setting up the fields which have things to do with the brewing temperature
+        establishTempFields();
+
+        // Setting up the strength view to the user
+        establishStrengthFields();
+    }
+
+    /**
+     * A helper method handling the establishment of fields to do with brew timnes
+     */
+    private void establishTimerFields() {
         TextView[] timeViews = {brewingFragment.getMinTimeView(), brewingFragment.getMaxTimeView()};
         ImageButton[] brewButtons = {brewingFragment.getBrewButtonFirst(),
-                                        brewingFragment.getBrewButtonSecond()};
+                brewingFragment.getBrewButtonSecond()};
         final int[] rawTimes = {teaBeingViewed.getBrewTime(), teaBeingViewed.getBrewTimeSub()};
         Pair<Integer, Integer> minSecs;
         int i;
@@ -148,21 +162,49 @@ public class TeaBasicsFragment extends Fragment {
                 timeViews[i].setVisibility(View.INVISIBLE);
             }
         }
+    }
 
+    /**
+     * A helper method taking the load of establishing the temperature fields
+     */
+    private void establishTempFields() {
         //TODO: Implement this with default temperatures based on tea type if times are not specified by
         // the user
         TextView[] tempViews = {brewingFragment.getMinTempView(), brewingFragment.getMaxTempView()};
         int[] brewTemps = {teaBeingViewed.getBrewMin(), teaBeingViewed.getBrewMax()};
         boolean imperialTemperatures = SettingsHelper.isTemperatureFahrenheit();
 
-        for (i = 0; i < tempViews.length; i++) {
-            // TODO: When preferences are implemented, ensure this works with centigrade
+        for (int i = 0; i < tempViews.length; i++) {
             if (brewTemps[i] > 0 && imperialTemperatures) {
                 tempViews[i].setText(String.format("%d F", brewTemps[i]));
             }
             else if (brewTemps[i] > 0) {
                 tempViews[i].setText(String.format("%d C", MiscHelper.fahrenheitToCentigrade(brewTemps[i])));
             }
+        }
+    }
+
+    /**
+     * A helper method meant purely to increase coherency. Handles establishment of strength fields.
+     */
+    private void establishStrengthFields() {
+        TextView strengthView = brewingFragment.getStrengthView();
+        TextView strengthUnitView = brewingFragment.getStrengthUnitView();
+        float idealStrength = teaBeingViewed.getIdealStrength();
+        if (idealStrength > -1f && SettingsHelper.isStrengthImperial()) {
+            // They prefer Imperial measurements
+            strengthView.setText(String.format("%.2f", idealStrength));
+        }
+        else if (idealStrength > -1f) {
+            // If they have supplied a strength but not a preference for imperial units
+            float metricStrength = MiscHelper.ouncesToGrams(idealStrength);
+            strengthView.setText(String.format("%.1f", metricStrength));
+            strengthUnitView.setText(R.string.MetricStength);
+        }
+        else {
+            // They haven't given a preference as to strength... so don't display nothing
+            strengthView.setVisibility(View.INVISIBLE);
+            strengthUnitView.setVisibility(View.INVISIBLE);
         }
     }
 

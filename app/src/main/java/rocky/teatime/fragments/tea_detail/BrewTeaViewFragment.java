@@ -33,6 +33,8 @@ public class BrewTeaViewFragment extends Fragment {
     private TextView maxTimeView;
     private TextView minTempView;
     private TextView maxTempView;
+    private TextView strengthView;
+    private TextView strengthUnitView;
 
     public BrewTeaViewFragment() {
         // Required empty public constructor
@@ -60,32 +62,10 @@ public class BrewTeaViewFragment extends Fragment {
         maxTempView = (TextView)theView.findViewById(R.id.max_temp_view);
         brewButtonFirst = (ImageButton)theView.findViewById(R.id.first_brew_button);
         brewButtonSecond = (ImageButton)theView.findViewById(R.id.second_brew_button);
+
+        strengthView = (TextView)theView.findViewById(R.id.strengthView);
+        strengthUnitView = (TextView)theView.findViewById(R.id.strengthUnitView);
         return theView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     /**
@@ -118,6 +98,14 @@ public class BrewTeaViewFragment extends Fragment {
 
     public ImageButton getBrewButtonSecond() {
         return brewButtonSecond;
+    }
+
+    public TextView getStrengthView() {
+        return strengthView;
+    }
+
+    public TextView getStrengthUnitView() {
+        return strengthUnitView;
     }
 }
 

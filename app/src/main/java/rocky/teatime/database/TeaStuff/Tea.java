@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
 import rocky.teatime.database.DataSource;
+import rocky.teatime.database.DatabaseHelper;
 
 /**
  * Holds information that a tea drinker might find of interest!
@@ -32,6 +33,8 @@ public class Tea {
     private int brewMin;                         // Min temp to brew the tea. -1 if not set
     private int brewMax;                         // Max temp to brew the tea. -1 If not set
     private String picLocation;                  // Location of the picture on disk.
+    private float idealStrength;                 // Ounces per Cup water for ideal strength
+    private boolean inStock;                     // A boolean which lets us know if a given tea is in stock
 
     public static long TEA_REMOVED_ID_FLAG = -505;   // A flag which we set if the tea has been removed from the DB
 
@@ -51,6 +54,14 @@ public class Tea {
         setBrewMin(dbEntry.getInt(5));
         setBrewMax(dbEntry.getInt(6));
         setPicLocation(dbEntry.getString(7));
+        setIdealStrength(dbEntry.getFloat(8));
+
+        if (dbEntry.getShort(9) == DatabaseHelper.BOOLEAN_TRUE) {
+            setInStock(true);
+        }
+        else {  // If it is not explictly true we assume it is false!
+            setInStock(false);
+        }
     }
 
     /**
@@ -66,7 +77,8 @@ public class Tea {
     public void saveToDB(Context programmeContext) {
         DataSource dbInterface = new DataSource(programmeContext);  // Creating our interface
         dbInterface.open();                                         // Opening the database
-        dbInterface.createEntry(name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation);
+        dbInterface.createEntry(name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation,
+                idealStrength, inStock);
         dbInterface.close();                                        // Closing the database
     }
 
@@ -77,7 +89,8 @@ public class Tea {
     public void updateDBEntry(Context programmeContext) {
         DataSource dbInterface = new DataSource(programmeContext);  // Creating our interface
         dbInterface.open();                                         // Opening the database
-        dbInterface.updateEntry(id, name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation);
+        dbInterface.updateEntry(id, name, type, brewTime, brewTimeSub, brewMin, brewMax, picLocation,
+                idealStrength, inStock);
         dbInterface.close();                                        // Closing the database
     }
 
@@ -343,6 +356,22 @@ public class Tea {
 
     public void setPicLocation(String picLocation) {
         this.picLocation = picLocation;
+    }
+
+    public float getIdealStrength() {
+        return idealStrength;
+    }
+
+    public void setIdealStrength(float idealStrength) {
+        this.idealStrength = idealStrength;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 
     /**

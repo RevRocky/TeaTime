@@ -24,6 +24,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TEMP_MIN = "MinTemp";
     public static final String COLUMN_TEMP_MAX = "MaxTemp";
     public static final String COLUMN_PIC_LOCATION = "PictureLocation";
+    public static final String COLUMN_TEA_STRENGTH = "TeaStrength";
+    public static final String COLUMN_IN_STOCK = "InStock";
+
+
+    // We have to store booleans as a short in the database. If 1 it is true. 0 for false
+    public static final short BOOLEAN_TRUE = 1;
 
     // Some private information used internally when looking at the database
     // Constant only for a given iteration of the Database Helper?
@@ -32,9 +38,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // A string specially for database creation
     private static String DATABASE_CREATE = String.format("create table %s (%s integer primary key " +
-            "autoincrement, %s, %s, %s, %s, %s, %s, %s text not null);",
+            "autoincrement, %s, %s, %s, %s, %s, %s, %s, %s, %s text not null);",
             TABLE_TEAS, COLUMN_ID, COLUMN_TEA, COLUMN_TYPE, COLUMN_BREW_TIME, COLUMN_BREW_SECOND,
-            COLUMN_TEMP_MIN, COLUMN_TEMP_MAX, COLUMN_PIC_LOCATION);
+            COLUMN_TEMP_MIN, COLUMN_TEMP_MAX, COLUMN_PIC_LOCATION, COLUMN_TEA_STRENGTH, COLUMN_IN_STOCK);
 
     /**
      * Simply calls the constructor of the parent class

@@ -13,6 +13,8 @@ public class JsonTea {
     private int brewMin;                         // Min temp to brew the tea. -1 if not set
     private int brewMax;                         // Max temp to brew the tea. -1 If not set
     private String picLocation;                  // Location of the picture on disk.
+    private float idealStrength;                 // Ideal strength of tea in oz. per US cup
+    private boolean inStock;                     // True if the tea is in stock
 
     /**
      * Constructs a Json Tea object from a given tea object
@@ -27,6 +29,8 @@ public class JsonTea {
         this.brewMin = teaClone.getBrewMin();
         this.brewMax = teaClone.getBrewMax();
         this.picLocation = teaClone.getPicLocation();
+        this.idealStrength = teaClone.getIdealStrength();
+        this.inStock = teaClone.isInStock();
     }
 
     /**
@@ -43,6 +47,8 @@ public class JsonTea {
         reconstructedTea.setBrewMin(brewMin);
         reconstructedTea.setBrewMax(brewMax);
         reconstructedTea.setPicLocation(picLocation);
+        reconstructedTea.setIdealStrength(idealStrength);
+        reconstructedTea.setInStock(inStock);
         return reconstructedTea;
     }
 }

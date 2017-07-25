@@ -92,6 +92,11 @@
         <item>Centigrade (C)</item>
     </string-array>
 
+    <string-array name="stengthScales">
+        <item>Oz. / Cup Water</item>
+        <item>Grams / 100mL Water</item>
+    </string-array>
+
     <string-array name="tempScalesInternal">
         <item>American</item>
         <item>Metric</item>

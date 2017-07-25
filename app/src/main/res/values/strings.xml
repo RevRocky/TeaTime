@@ -24,7 +24,8 @@
     <string name="EditTea">Editing Tea Information</string>
     <string name="Basics">Basics</string>
     <string name="DetailedInfo">Tasting Notes</string>
-
+    <string name="ImperialStrength">oz. per cup water</string>
+    <string name="MetricStength">g/100mL water</string>
 
     <string name="SortBy">Sort By:</string>
     <string name="Type">Type</string>
@@ -33,11 +34,13 @@
     <string name="MostRecentlyAdded">Most Recently Added</string>
     <string name="LeastRecentlyAdded">First Added</string>
 
+    <!-- Strings Present on the Settings Screen -->
     <string name="Settings">Settings</string>
     <string name="Vibrate">Vibrate Mode</string>
     <string name="Ferinheit">Fahrenheit</string>
     <string name="Celsius">Celsius</string>
     <string name="Temperature">Temp. Scale</string>
+    <string name="StrengthMeasurements">Strength Measurements</string>
 
     <!-- Tea Variates -->
     <string name="Black">Black</string>
@@ -60,7 +63,9 @@
     <string name="BrewBetween">Brewing Range:</string>
 
     <string name="Enjoy">Ready to Enjoy?</string>
-
+    <string name="Strength">For Perfect Strength:</string>
+    <string name="ImperialIdeal">oz. tea per cup</string>
+    <string name="MetricIdeal">grams tea per 100 mL.</string>
 
 
     <string name="DataBaseError">An Error Occurred Reading Updated Entry from Database.</string>

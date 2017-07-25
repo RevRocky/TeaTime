@@ -50,11 +50,15 @@ public class AddTeaActivity extends AppCompatActivity {
      */
     protected void changeCaptions() {
         boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
+        boolean imperialStrength = SettingsHelper.isStrengthImperial();
 
         // Changing the captions if the user does not prefer imperial temperatures
         if (!imperialTemperature) {
             ((TextView) findViewById(R.id.minTempCaption)).setText(R.string.min_Temp_Cent);
             ((TextView) findViewById(R.id.maxTempCaption)).setText(R.string.max_Temp_Cent);
+        }
+        if (!imperialStrength) {
+            ((TextView) findViewById(R.id.strengthUnits)).setText(R.string.MetricIdeal);
         }
     }
 
@@ -163,7 +167,6 @@ public class AddTeaActivity extends AppCompatActivity {
         EditText currentField;      // Current field we are reading
         Spinner teaType;            // Spinner where user selects their type of tea
         String entry;
-        DataSource dbInterface;     // An interface to the SQL Database
 
         Tea newTea = new Tea();     // Initialising an empty tea object
 
@@ -241,6 +244,23 @@ public class AddTeaActivity extends AppCompatActivity {
             // We have a picture
             newTea.setPicLocation(currentPhotoPath);
         }
+
+        // Acquiring the ideal strength with which to brew the tea at.
+        currentField = (EditText) findViewById(R.id.brewStrength);
+        entry = currentField.getText().toString().trim();
+        nonEmptyField = checkField(entry);
+        if (nonEmptyField && SettingsHelper.isStrengthImperial()) {
+            newTea.setIdealStrength(Float.valueOf(entry));
+        }
+        else if (nonEmptyField) {
+            float imperialStrength = MiscHelper.gramsToOunces(Float.valueOf(entry));
+            newTea.setIdealStrength(imperialStrength);
+        }
+        else {
+            newTea.setIdealStrength(-1f);   // If not set why save it?
+        }
+
+        newTea.setInStock(true);    // Chances are, if they're adding it, they have it right there.
 
         //Finally we extract the type of the tea from the spinner
         teaType = (Spinner) findViewById(R.id.teaTypeSelect);

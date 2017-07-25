@@ -28,7 +28,8 @@ public class DataSource {
     private DatabaseHelper dbHelper;    // DB helper object
     private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_TEA,
             DatabaseHelper.COLUMN_TYPE, DatabaseHelper.COLUMN_BREW_TIME, DatabaseHelper.COLUMN_BREW_SECOND,
-            DatabaseHelper.COLUMN_TEMP_MIN, DatabaseHelper.COLUMN_TEMP_MAX, DatabaseHelper.COLUMN_PIC_LOCATION};
+            DatabaseHelper.COLUMN_TEMP_MIN, DatabaseHelper.COLUMN_TEMP_MAX, DatabaseHelper.COLUMN_PIC_LOCATION,
+            DatabaseHelper.COLUMN_TEA_STRENGTH, DatabaseHelper.COLUMN_IN_STOCK};
 
     /**
      * A simple constructor that constructs this object as well as a database helper object
@@ -72,10 +73,13 @@ public class DataSource {
      * @param minTemp an integer
      * @param maxTemp an Integer, nothing surprising
      * @param picLocation Location of the tea's picture on the hard drive
+     * @param idealStrength ideal strength to brew tea at, a float
+     * @param inStock boolean communicating if the tea is in stock.
      * @return A tea object corresponding with the new object
      */
     public Tea createEntry(String teaName, TeaType teaType, int brewTime, int brewSecond,
-                           int minTemp, int maxTemp, String picLocation) {
+                           int minTemp, int maxTemp, String picLocation, float idealStrength,
+                           boolean inStock) {
         ContentValues values = new ContentValues();
 
         // Sigh no real better way to do this so I'll do it here
@@ -87,6 +91,15 @@ public class DataSource {
         values.put(allColumns[5], minTemp);
         values.put(allColumns[6], maxTemp);
         values.put(allColumns[7], picLocation);
+        values.put(allColumns[8], idealStrength);
+
+        if (inStock) {
+            values.put(allColumns[9], DatabaseHelper.BOOLEAN_TRUE);    // Put the equivalent of the boolean true
+        }
+        else {
+            values.put(allColumns[9], ~DatabaseHelper.BOOLEAN_TRUE);   // Doing a bitwise not. So we aren't actually storing zero
+        }
+
 
         long insertId = database.insert(DatabaseHelper.TABLE_TEAS, null, values);
         Cursor cursor = database.query(DatabaseHelper.TABLE_TEAS, allColumns,
@@ -107,9 +120,12 @@ public class DataSource {
      * @param minTemp an integer
      * @param maxTemp an Integer, nothing surprising
      * @param picLocation Location of the picture of the tea on disk
+     * @param idealStrength ideal strength to brew tea at, a float
+     * @param inStock boolean communicating if the tea is in stock.
      */
     public void updateEntry(long id, String teaName, TeaType teaType, int brewTime, int brewSecond,
-                           int minTemp, int maxTemp, String picLocation) {
+                           int minTemp, int maxTemp, String picLocation, float idealStrength,
+                            boolean inStock) {
         ContentValues values = new ContentValues();
 
         // Again there's no real better way to deal with this other than 1-by-1
@@ -120,6 +136,14 @@ public class DataSource {
         values.put(allColumns[5], minTemp);
         values.put(allColumns[6], maxTemp);
         values.put(allColumns[7], picLocation);
+        values.put(allColumns[8], idealStrength);
+
+        if (inStock) {
+            values.put(allColumns[9], DatabaseHelper.BOOLEAN_TRUE);    // Put the equivalent of the boolean true
+        }
+        else {
+            values.put(allColumns[9], ~DatabaseHelper.BOOLEAN_TRUE);   // Doing a bitwise not. So we aren't actually storing zero
+        }
 
         database.update(DatabaseHelper.TABLE_TEAS, values, String.format("_id=%d", id), null);
     }

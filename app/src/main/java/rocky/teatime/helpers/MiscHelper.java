@@ -11,6 +11,9 @@ import rocky.teatime.TeaTime;
  * A helper class which handles.... everything which doesn't really have a home
  */
 public class MiscHelper {
+
+    private static float gramsToOuncesConst = .083454f;  // 1 gram per 100 ml equates to .008 ounces per cup
+
     /**
      * Takes an integer amount of seconds and returns a pair with an equivalent amount of time in
      * minutes/seconds.
@@ -66,4 +69,23 @@ public class MiscHelper {
     public static int fahrenheitToCentigrade(int tempInFahrenheit) {
         return Math.round((tempInFahrenheit - 32) * (5.0f / 9.0f));
     }
+
+    /**
+     * Converts a measurement in ounces per US cup water to grams per 100mL water.
+     * @param ouncesPerCup A measurement of ideal brew strength in ounces per US cup of water
+     * @return An equivalent measurement in terms of grams of tea per 100mL
+     */
+    public static float ouncesToGrams(float ouncesPerCup) {
+        return ouncesPerCup * gramsToOuncesConst;
+    }
+
+    /**
+     * Converts a measurement in grams per 100mL water to ounces per cup of water
+     * @param gramsPerHundredmL The measurement in grams per 100mL water
+     * @return Measurement in ounces per cup water
+     */
+    public static float gramsToOunces(float gramsPerHundredmL) {
+        return gramsPerHundredmL / gramsToOuncesConst;
+    }
+
 }

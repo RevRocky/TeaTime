@@ -13,10 +13,11 @@ public class SettingsHelper {
 
     // Settings Keys
     private static final String TEMP_KEY = "tempPreference";
+    private static final String STRENGTH_KEY = "strengthPreference";
     private static final String VIBRATE_PREFERENCE_KEY = "vibrateAlarm";
 
-    // If user prefers an imperial key, the result in the array is "American"
-    private static final String FAHRENHEIT_FLAG = "American";
+    // If user prefers imperial measurements, the result in the array is "American"
+    private static final String IMPERIAL_FLAG = "American";
 
     /**
      * Checks the user's preferences and checks if their preferred temperature mode is for the
@@ -25,7 +26,16 @@ public class SettingsHelper {
      */
     public static boolean isTemperatureFahrenheit() {
         return PreferenceManager.getDefaultSharedPreferences(TeaTime.getAppContext()).getString(TEMP_KEY,
-                new String()).equals(FAHRENHEIT_FLAG);
+                new String()).equals(IMPERIAL_FLAG);
+    }
+
+    /**
+     * Checks the users preferences to check for their preferred measurement of tea strength
+     * @return True if the user prefers imperial strength measurements, false otherwise
+     */
+    public static boolean isStrengthImperial() {
+        return PreferenceManager.getDefaultSharedPreferences(TeaTime.getAppContext()).getString(STRENGTH_KEY,
+                new String()).equals(IMPERIAL_FLAG);
     }
 
     /**

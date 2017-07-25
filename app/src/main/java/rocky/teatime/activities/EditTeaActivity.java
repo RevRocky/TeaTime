@@ -105,6 +105,18 @@ public class EditTeaActivity extends AddTeaActivity {
             }
         }
 
+        // Checking to see if the user has specified a strength, if so display it.
+        boolean imperialStrength = SettingsHelper.isStrengthImperial();
+        EditText strengthField = (EditText) findViewById(R.id.brewStrength);
+        if (teaBeingEdited.getIdealStrength() > -1f && imperialStrength) {
+            strengthField.setText(String.format("%f", teaBeingEdited.getIdealStrength()));
+        }
+        else if (teaBeingEdited.getIdealStrength() > -1f) {
+            // We know the user prefers metric units for strength
+            float metricStrength = MiscHelper.ouncesToGrams(teaBeingEdited.getIdealStrength());
+            strengthField.setText(String.format("%.2f", metricStrength));
+        }
+
         // Now we handle the image!
         if (!teaBeingEdited.getPicLocation().equals("null")) {
             // If an image exists... open it.
@@ -117,17 +129,16 @@ public class EditTeaActivity extends AddTeaActivity {
         teaTypeSelect.setSelection(teaBeingEdited.getType().ordinal());
     }
 
-    @Override
+
     /**
      * Saves the users input to the database
      * @param thisView The current programme view
      */
+    @Override
     public void saveDBInfo (View thisView) {
         EditText currentField;      // Current field we are reading
         Spinner teaType;            // Spinner where user selects their type of tea
         String entry;
-        DataSource dbInterface;     // An interface to the SQL Database
-
 
         // No real good way to do this in a loop structure... just one at a time, unfortunately
         currentField = (EditText) findViewById(R.id.teaName);
@@ -194,6 +205,21 @@ public class EditTeaActivity extends AddTeaActivity {
         }
         else {
             teaBeingEdited.setBrewMax(-1);
+        }
+
+        // Acquiring the ideal strength with which to brew the tea at.
+        currentField = (EditText) findViewById(R.id.brewStrength);
+        entry = currentField.getText().toString().trim();
+        nonEmptyField = checkField(entry);
+        if (nonEmptyField && SettingsHelper.isStrengthImperial()) {
+            teaBeingEdited.setIdealStrength(Float.valueOf(entry));
+        }
+        else if (nonEmptyField) {
+            float imperialStrength = MiscHelper.gramsToOunces(Float.valueOf(entry));
+            teaBeingEdited.setIdealStrength(imperialStrength);
+        }
+        else {
+            teaBeingEdited.setIdealStrength(-1f);   // If not set why save it?
         }
 
         // Check to see if there's a picture. If so... save it.
