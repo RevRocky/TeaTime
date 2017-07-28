@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import rocky.teatime.R;
 import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.exceptions.NotEnoughInfoException;
 import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.ImageHelper;
@@ -34,12 +36,14 @@ public class AddTeaActivity extends AppCompatActivity {
 
     private final int PHOTO_REQUEST = 1;     // A request code for a photo
     protected String currentPhotoPath;       // Where the image will be stored
+    protected Tea teaInQuestion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_new_add_tea);
         changeCaptions();
+        teaInQuestion = new Tea();
     }
 
     /**
@@ -161,115 +165,145 @@ public class AddTeaActivity extends AppCompatActivity {
      * @param thisView The current programme view
      */
     public void saveDBInfo (View thisView) {
-        EditText currentField;      // Current field we are reading
-        Spinner teaType;            // Spinner where user selects their type of tea
-        String entry;
-
-        Tea newTea = new Tea();     // Initialising an empty tea object
-
-        // No real good way to do this in a loop structure... just one at a time, unfortunately
-        currentField = (EditText) findViewById(R.id.teaName);
-        entry = currentField.getText().toString().trim();
-        boolean fieldStatus = checkField(entry);
-
-        if (fieldStatus) {
-            newTea.setName(entry);
+        try {
+            parseName();                 // Read the name of the tea
+            readTimeSpinners();          // Read the time spinners
         }
-        else {
-            AlertHelper.createOKAlert(getResources().getString(R.string.GeneralInfoError),
-                    this);   // Displaying the alert.
-            return;
+        catch (NotEnoughInfoException e) {
+            Log.e("error", e.getMessage());
+            return;                     // Return to the main event loop
         }
 
-        // Reading and validating the brew time based upon the values in the spinners
-        Spinner minSpin = (Spinner) findViewById(R.id.minuteSpinnerOne);
-        Spinner secSpin = (Spinner) findViewById(R.id.secondSinnerOne);
-        newTea.setBrewTime(readTimeSpinners(minSpin, secSpin));
+        readTemperatureEntries();    // Read the temperature entries
+        readPictureLocation();       // Read the location of the picture
+        readStrengthField();         // Read the user's preferred strength
 
-        // We only want to ensure the user has entered a proper first brew time
-        if (newTea.getBrewTime() <= 0) {
-            AlertHelper.createOKAlert(getResources().getString(R.string.SteepError),
-                    this);
-            return;
-        }
-
-        // Recycling the minSpin and secSpin objects
-        minSpin = (Spinner) findViewById(R.id.minuteSpinner2);
-        secSpin = (Spinner) findViewById(R.id.secondSpinner2);
-        newTea.setBrewTimeSub(readTimeSpinners(minSpin, secSpin));
-
-        // Not a required field so we can ignore it!
-        currentField = (EditText) findViewById(R.id.minTempEntry);
-        entry = currentField.getText().toString().trim();
-        boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
-
-        // Checking the field for validity!
-        boolean nonEmptyField = checkField(entry);
-
-        if (nonEmptyField && imperialTemperature) {
-            newTea.setBrewMin(Integer.valueOf(entry));
-        }
-        else if (nonEmptyField) {   // We know the user prefers centigrade
-            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
-            newTea.setBrewMin(convertedTemp);
-        }
-        else {
-            newTea.setBrewMin(-1);
-        }
-
-        // Not a required field so we can ignore it!
-        currentField = (EditText) findViewById(R.id.maxTempEntry);
-        entry = currentField.getText().toString().trim();
-        nonEmptyField = checkField(entry);
-        if (nonEmptyField && imperialTemperature) {
-            newTea.setBrewMax(Integer.valueOf(entry));
-        }
-        else if (nonEmptyField) {   // We know the user prefers centigrade
-            int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
-            newTea.setBrewMax(convertedTemp);
-        }
-        else {
-            newTea.setBrewMax(-1);
-        }
-
-
-        // Ensuring the location of the picture is saved
-        if (currentPhotoPath == null) {
-            newTea.setPicLocation(Tea.NO_PICTURE_FLAG);
-        }
-        else {
-            // We have a picture
-            newTea.setPicLocation(currentPhotoPath);
-        }
-
-        // Acquiring the ideal strength with which to brew the tea at.
-        currentField = (EditText) findViewById(R.id.brewStrength);
-        entry = currentField.getText().toString().trim();
-        nonEmptyField = checkField(entry);
-        if (nonEmptyField && SettingsHelper.isStrengthImperial()) {
-            newTea.setIdealStrength(Float.valueOf(entry));
-        }
-        else if (nonEmptyField) {
-            float imperialStrength = MiscHelper.gramsToOunces(Float.valueOf(entry));
-            newTea.setIdealStrength(imperialStrength);
-        }
-        else {
-            newTea.setIdealStrength(-1f);   // If not set why save it?
-        }
-
-        newTea.setInStock(true);    // Chances are, if they're adding it, they have it right there.
+        // We can just do everything in this method from here on out.
+        teaInQuestion.setInStock(true);    // Chances are, if they're adding it, they have it right there.
 
         //Finally we extract the type of the tea from the spinner
-        teaType = (Spinner) findViewById(R.id.teaTypeSelect);
+        Spinner teaType = (Spinner) findViewById(R.id.teaTypeSelect);
         int typeNum = (int) teaType.getSelectedItemId();
-        newTea.setType(typeNum);
+        teaInQuestion.setType(typeNum);
 
-        newTea.saveToDB(this);      // The reference to this is being passed in to be used as a context
+        teaInQuestion.saveToDB(this);      // The reference to this is being passed in to be used as a context
 
         // Preparing to return to last activity
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();
+    }
+
+    /**
+     * Reads the entry for the name and sets the name of new tea to match that value. If no name is
+     * entered then an alert will be flagged
+     * @throws NotEnoughInfoException if the user does not supply a name for the tea.
+     */
+    protected void parseName() throws NotEnoughInfoException {
+        EditText currentField = (EditText) findViewById(R.id.teaName);
+        String entry = currentField.getText().toString().trim();
+        boolean fieldStatus = checkField(entry);
+
+        if (fieldStatus) {
+            teaInQuestion.setName(entry);
+        }
+        else {
+            AlertHelper.createOKAlert(getResources().getString(R.string.GeneralInfoError),
+                    this);   // Displaying the alert.
+            throw new NotEnoughInfoException("Please Supply a name for the tea"); // Throw an error.
+        }
+    }
+
+    /**
+     * Reads the time spinners. If a first steep time is not input into the programme an error will
+     * pop up and an accompanying exception will be raised
+     * @throws NotEnoughInfoException If the first time spinner is at a time equivalent equal to zero.
+     */
+    protected void readTimeSpinners() throws NotEnoughInfoException {
+        // Reading and validating the brew time based upon the values in the spinners
+        Spinner minSpin = (Spinner) findViewById(R.id.minuteSpinnerOne);
+        Spinner secSpin = (Spinner) findViewById(R.id.secondSinnerOne);
+        teaInQuestion.setBrewTime(readTimeSpinners(minSpin, secSpin));
+
+        // We only want to ensure the user has entered a proper first brew time
+        if (teaInQuestion.getBrewTime() <= 0) {
+            AlertHelper.createOKAlert(getResources().getString(R.string.SteepError),
+                    this);
+            throw new NotEnoughInfoException("Please add a first steep time");  // Throw that error
+        }
+
+        // Recycling the minSpin and secSpin objects
+        minSpin = (Spinner) findViewById(R.id.minuteSpinner2);
+        secSpin = (Spinner) findViewById(R.id.secondSpinner2);
+        teaInQuestion.setBrewTimeSub(readTimeSpinners(minSpin, secSpin));
+    }
+
+    /**
+     * Reads the temperatures supplied by the user and stores them as part of the tea.
+     * If the user is entering temperatures in metric then it is converted into ferinheit for
+     * consistent storage.
+     */
+    protected void readTemperatureEntries() {
+        String entry;
+
+        EditText[] tempFields = {(EditText) findViewById(R.id.minTempEntry),
+                (EditText) findViewById(R.id.maxTempEntry)};
+        boolean imperialTemperature = SettingsHelper.isTemperatureFahrenheit();
+        int[] intermediateTempArray = new int[tempFields.length];   // Storing the temperatures in a temporary array.
+
+        for (int i = 0; i < tempFields.length; i++) {
+            entry = tempFields[i].getText().toString();
+            // Checking the field for validity!
+            boolean nonEmptyField = checkField(entry);
+
+            if (nonEmptyField && imperialTemperature) {
+                intermediateTempArray[i] = Integer.valueOf(entry);
+            }
+            else if (nonEmptyField) {   // We know the user prefers centigrade
+                int convertedTemp = MiscHelper.centigradeToFahrenheit(Integer.valueOf(entry));
+                intermediateTempArray[i] = convertedTemp;
+            }
+            else {
+                intermediateTempArray[i] = Tea.EMPTY_ENTRY_FLAG;
+            }
+        }
+        teaInQuestion.setBrewMin(intermediateTempArray[0]); // Setting the minimum temperature
+        teaInQuestion.setBrewMax(intermediateTempArray[1]); // Setting the maximum temperature
+    }
+
+    /**
+     * Gets the path of the current photo taken and sets the relevant parameter in the 'teaInQuestion'
+     * object.
+     */
+    protected void readPictureLocation() {
+        // Ensuring the location of the picture is saved
+        if (currentPhotoPath == null) {
+            teaInQuestion.setPicLocation(Tea.NO_PICTURE_FLAG);
+        }
+        else {
+            // We have a picture
+            teaInQuestion.setPicLocation(currentPhotoPath);
+        }
+    }
+
+    /**
+     * Reads the user's preference for strength. If they prefer metric measurments itr is converted
+     * into Imperial units for storage.
+     */
+    protected void readStrengthField() {
+        EditText currentField = (EditText) findViewById(R.id.brewStrength);
+        String entry = currentField.getText().toString().trim();
+        boolean nonEmptyField = checkField(entry);
+        if (nonEmptyField && SettingsHelper.isStrengthImperial()) {
+            teaInQuestion.setIdealStrength(Float.valueOf(entry));
+        }
+        else if (nonEmptyField) {
+            float imperialStrength = MiscHelper.gramsToOunces(Float.valueOf(entry));
+            teaInQuestion.setIdealStrength(imperialStrength);
+        }
+        else {
+            teaInQuestion.setIdealStrength(-1f);   // If not set why save it?
+        }
     }
 
     /**

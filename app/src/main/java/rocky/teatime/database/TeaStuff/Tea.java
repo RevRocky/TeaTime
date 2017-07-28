@@ -37,6 +37,7 @@ public class Tea {
 
     public static String TEA_PAYLOAD_KEY = "Cargo";
     public static String NO_PICTURE_FLAG = "NULL";
+    public static int EMPTY_ENTRY_FLAG = -1;
 
     /**
      * Creates a tea object from a given database entry
