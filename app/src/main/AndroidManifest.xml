@@ -13,9 +13,9 @@
     <application
         android:name=".TeaTime"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/tea_time_launcher_icon_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/tea_time_launcher_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
