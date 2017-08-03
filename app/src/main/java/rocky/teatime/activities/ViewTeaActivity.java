@@ -60,7 +60,6 @@ public class ViewTeaActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    // TODO: Look into moving this into a ActionBarHelper Class
     /**
      * Colours and titles the action bar
      */

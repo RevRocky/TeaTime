@@ -73,7 +73,7 @@ public class AddTeaActivity extends AppCompatActivity {
         // Deleting the old photo in order to save space.
         if (currentPhotoPath != null) {
             File imageFile = new File(currentPhotoPath);
-            boolean deleted = imageFile.delete();    // Delete the old file
+            imageFile.delete();
             currentPhotoPath = null;
         }
 
@@ -90,7 +90,7 @@ public class AddTeaActivity extends AppCompatActivity {
 
             // Starting the activity if it is safe
             if (isIntentSafe) {
-                File photoFile = null;
+                File photoFile;
 
                 // Ensuring the path was created successfully
                 try {
@@ -129,7 +129,6 @@ public class AddTeaActivity extends AppCompatActivity {
 
                 // Getting the width and height of the largest place we'd place this image
                 // NOTE: This is the screen in the viewTeaActivity
-                // TODO: This really ought to be thought of better so that it works with landscape mode.
                 Pair<Integer, Integer> biggestImgSize = new Pair<>(TeaBasicsFragment.getImageHeight(),
                         MiscHelper.getScreenWidth(this));
 
@@ -222,7 +221,7 @@ public class AddTeaActivity extends AppCompatActivity {
     protected void readTimeSpinners() throws NotEnoughInfoException {
         // Reading and validating the brew time based upon the values in the spinners
         Spinner minSpin = (Spinner) findViewById(R.id.minuteSpinnerOne);
-        Spinner secSpin = (Spinner) findViewById(R.id.secondSinnerOne);
+        Spinner secSpin = (Spinner) findViewById(R.id.secondSpnnerOne);
         teaInQuestion.setBrewTime(readTimeSpinners(minSpin, secSpin));
 
         // We only want to ensure the user has entered a proper first brew time
@@ -267,8 +266,10 @@ public class AddTeaActivity extends AppCompatActivity {
                 intermediateTempArray[i] = Tea.EMPTY_ENTRY_FLAG;
             }
         }
-        teaInQuestion.setBrewMin(intermediateTempArray[0]); // Setting the minimum temperature
-        teaInQuestion.setBrewMax(intermediateTempArray[1]); // Setting the maximum temperature
+
+        // This way we'll ensure the min and max are always adhered to.
+        teaInQuestion.setBrewMin(Math.min(intermediateTempArray[0], intermediateTempArray[1])); // Setting the minimum temperature
+        teaInQuestion.setBrewMax(Math.max(intermediateTempArray[0], intermediateTempArray[1])); // Setting the maximum temperature
     }
 
     /**

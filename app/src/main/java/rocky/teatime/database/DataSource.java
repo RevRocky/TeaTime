@@ -60,8 +60,6 @@ public class DataSource {
         dbHelper.close();
     }
 
-
-    //TODO: Check to see if returning the new instance of the tea object is even worth it...
     /**
      * Adds a new item to the database?
      * @param teaName The name of tea being added to the DB

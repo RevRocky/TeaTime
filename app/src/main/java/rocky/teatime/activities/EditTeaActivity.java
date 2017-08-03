@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,7 +20,6 @@ import rocky.teatime.R;
 import rocky.teatime.database.TeaStuff.JsonTea;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.exceptions.NotEnoughInfoException;
-import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.MiscHelper;
 import rocky.teatime.helpers.SettingsHelper;
 
@@ -30,6 +32,8 @@ import rocky.teatime.helpers.SettingsHelper;
 public class EditTeaActivity extends AddTeaActivity {
 
     public static final int EDIT_TEA_REQUEST = 50;
+
+    private static final int IN_STOCK_MENU_ORDER = 0;    // The position of the in stock menu item in the menu
 
 
     /**
@@ -64,7 +68,7 @@ public class EditTeaActivity extends AddTeaActivity {
         populateTemperatureFields();    // Populates the fields storing the brewing temperatures
         populateStrengthField();        // Populates the strength field
         displayTeaImage();              // Display Thumbnail should there be one.
-        spinTimeSpinners();             // Lastly we handle the type spinners!
+        spinTypeSpinners();             // Lastly we handle the type spinners!
     }
 
     /**
@@ -82,7 +86,7 @@ public class EditTeaActivity extends AddTeaActivity {
     private void spinTimeSpinners() {
         // Handling the spinners
         Pair<Spinner, Spinner> spinners = new Pair<>((Spinner) findViewById(R.id.minuteSpinnerOne),
-                (Spinner) findViewById(R.id.secondSinnerOne));
+                (Spinner) findViewById(R.id.secondSpnnerOne));
         Pair<Integer, Integer> minSec = MiscHelper.secondsToMinutes(teaInQuestion.getBrewTime());
         spinners.first.setSelection(minSec.first);
         spinners.second.setSelection(minSec.second);
@@ -161,7 +165,42 @@ public class EditTeaActivity extends AddTeaActivity {
         teaTypeSelect.setSelection(teaInQuestion.getType().ordinal());
     }
 
+    /**
+     * Fetches the Action Bar Menu
+     *
+     * @param menu A menu class which we will inject the EditTeaMenu
+     * @return True if successful, false otherwise
+     */
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_tea_menu, menu);
+        checkInStockMenu(menu.getItem(IN_STOCK_MENU_ORDER));    // Ensure the menu matches the user's preferences!
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    /**
+     * Sets the menu item to reflect whether or not a given tea is currently in stock.
+     * @param inStockItem The menu item corresponding with whether the tea is currently in stock.
+     */
+    private void checkInStockMenu(MenuItem inStockItem) {
+        inStockItem.setChecked(teaInQuestion.isInStock());
+    }
+
+    /**
+     * Handles the selection of different menu items by the user
+     * @param item The menu item manipulated by the user
+     * @return True should the operation proceed with out a hitch.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.inStockCheckEditTea:
+                item.setChecked(!item.isChecked());         // Flipping the checkbox
+                teaInQuestion.setInStock(item.isChecked()); // Instock should reflect the state of the menu.
+                return true;
+        }
+        return false;       // The menu checked does not match any known menu item.
+    }
     /**
      * Saves the users input to the database
      * @param thisView The current programme view
@@ -190,7 +229,6 @@ public class EditTeaActivity extends AddTeaActivity {
         teaInQuestion.updateDBEntry(this);  // The reference to this is being passed in to be used as a context
 
         // Preparing to return to last activity
-        // TODO: Would it be worth checking for any changes.
         Intent returnIntent = new Intent();
         setResult(RESULT_OK, returnIntent);
         finish();

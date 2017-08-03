@@ -51,8 +51,6 @@ public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickL
         menuInflater.inflate(R.menu.tea_context_menu, menu);    // Inflate the menu!
     }
 
-    //TODO Implement some actual functionality here other than making toast
-
     /**
      * Currently this is a rump method simply to test that everything works. I do not yet know
      * what I want this to do.

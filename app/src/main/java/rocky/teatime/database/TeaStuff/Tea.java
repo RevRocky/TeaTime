@@ -18,7 +18,6 @@ import rocky.teatime.database.DatabaseHelper;
 /**
  * Holds information that a tea drinker might find of interest!
  * @author Rocky Petkov
- * TODO: Ensure we can go back and forth between Farenheit and Celsius
  */
 public class Tea {
 
@@ -177,12 +176,16 @@ public class Tea {
         this.name = name;
     }
 
-    // TODO: Flagged for deletion
     public TeaType getType() {
         return type;
     }
-    Resources stringResources = Resources.getSystem();  // Allowing us to get our string values
+
+    /**
+     * Returns the string corresponding to the type name of the tea
+     * @return The string corresponding to the type name of the tea
+     */
     public String getTypeName() {
+        Resources stringResources = Resources.getSystem();  // Allowing us to get our string values
         switch (type) {
             case BLACK:
                 return stringResources.getString(R.string.Black);

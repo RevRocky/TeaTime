@@ -11,7 +11,7 @@ public class NotEnoughInfoException extends Exception {
     /**
      * A pretty standard exception constructor. Simply passes the message up to the parent classes'
      * constructor
-     * @param message
+     * @param message Message we wish to display with the exception
      */
     public NotEnoughInfoException(String message) {
         super(message);

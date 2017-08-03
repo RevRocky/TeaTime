@@ -22,8 +22,9 @@ public class BrewTeaViewFragment extends Fragment {
     private ImageButton brewButtonSecond;
     private TextView minTimeView;
     private TextView maxTimeView;
-    private TextView minTempView;
-    private TextView maxTempView;
+    private TextView minTempView;       // Invisible if only one temperature is entered
+    private TextView singleTempView;    // Holds the dash unless only one temperature is entered
+    private TextView maxTempView;       // Invisible if only one temperature is entered
     private TextView strengthView;
     private TextView strengthUnitView;
 
@@ -49,22 +50,13 @@ public class BrewTeaViewFragment extends Fragment {
         minTimeView = (TextView)theView.findViewById(R.id.first_brew_time);
         maxTimeView = (TextView)theView.findViewById(R.id.second_brew_time);
         minTempView = (TextView)theView.findViewById(R.id.min_temp_view);
-
+        singleTempView = (TextView)theView.findViewById(R.id.single_temp_view);
         maxTempView = (TextView)theView.findViewById(R.id.max_temp_view);
         brewButtonFirst = (ImageButton)theView.findViewById(R.id.first_brew_button);
         brewButtonSecond = (ImageButton)theView.findViewById(R.id.second_brew_button);
-
         strengthView = (TextView)theView.findViewById(R.id.strengthView);
         strengthUnitView = (TextView)theView.findViewById(R.id.strengthUnitView);
         return theView;
-    }
-
-    /**
-     * Sets the gui components up for a single temperature
-     * @param fragView Reference to the fragment's view object
-     */
-    private void setupSingleTemperature(View fragView) {
-        // TODO Implement
     }
 
     public TextView getMinTimeView() {
@@ -97,6 +89,10 @@ public class BrewTeaViewFragment extends Fragment {
 
     public TextView getStrengthUnitView() {
         return strengthUnitView;
+    }
+
+    public TextView getSingleTempView() {
+        return singleTempView;
     }
 }
 

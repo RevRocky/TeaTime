@@ -26,7 +26,9 @@
     <string name="DetailedInfo">Tasting Notes</string>
     <string name="ImperialStrength">oz. per cup water</string>
     <string name="MetricStength">g/100mL water</string>
+    <string name="InStock">In Stock</string>
 
+    <!-- Sorting Methods -->
     <string name="SortBy">Sort By:</string>
     <string name="Type">Type</string>
     <string name="NameAZ">Name A-Z</string>

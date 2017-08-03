@@ -13,7 +13,6 @@ public enum TeaType {
      * @param someNum An integer which will correspond with an enum value
      * @return An instance of TeaType which corresponds with the supplied integer
      */
-    // TODO Get a more perminent solution
     public static TeaType fromInt(int someNum) {
         switch(someNum) {
             case 0:

@@ -46,9 +46,6 @@ public class MiscHelper {
         return displayMetrics.heightPixels;
     }
 
-    // TODO: It might behoove me to think of a slight modification to these formulae that they will
-    // 1) Return Two Integers 2) Result in no loss of data
-
     /**
      * Like Ellis Island but for a temperature
      * @param tempInCentigrade Huddled masses yearning to breathe free

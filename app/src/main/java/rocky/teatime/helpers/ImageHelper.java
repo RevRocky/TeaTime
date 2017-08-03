@@ -25,7 +25,6 @@ public class ImageHelper {
      * @param height Height of the image button
      * @return The image resized to fit within the button
      */
-    // TODO Put in it's own class and generalise the method
     public static Bitmap saveImageAsSize(String pathToFile, int width, int height) {
         // Getting the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

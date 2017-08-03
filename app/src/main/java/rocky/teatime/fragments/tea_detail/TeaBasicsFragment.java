@@ -2,6 +2,7 @@ package rocky.teatime.fragments.tea_detail;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -104,8 +105,13 @@ public class TeaBasicsFragment extends Fragment {
         // Setting up the fields to do with the timer
         establishTimerFields();
 
-        // Setting up the fields which have things to do with the brewing temperature
-        establishTempFields();
+        // Determining if the user has entered one or two temperatures
+        if (teaBeingViewed.getBrewMin() == Tea.EMPTY_ENTRY_FLAG) {
+            establishSingleTempField(teaBeingViewed.getBrewMax());  // Single temp view with the max temperature
+        }
+        else {
+            establishMultiTempFields();
+        }
 
         // Setting up the strength view to the user
         establishStrengthFields();
@@ -165,25 +171,58 @@ public class TeaBasicsFragment extends Fragment {
     }
 
     /**
-     * A helper method taking the load of establishing the temperature fields
+     * Establishing the view if the user has entered one or fewer temperatures into the record for the tea
+     * @param singleTempToDisplay The singular temperature which the person wishes to display.
      */
-    private void establishTempFields() {
+    private void establishSingleTempField(int singleTempToDisplay) {
+        TextView singletempView = brewingFragment.getSingleTempView();    // Getting the single temp view
+        TextView[] tempViewsToDisable = {brewingFragment.getMinTempView(), brewingFragment.getMaxTempView()};
+        boolean imperialTemperatures = SettingsHelper.isTemperatureFahrenheit();
+
+        // Ensuring that the middle temperature view is set properly
+        if (imperialTemperatures && singleTempToDisplay > Tea.EMPTY_ENTRY_FLAG) {
+            // If imperial temperatures and the entry is not negative one
+            singletempView.setText(String.format("%d F", singleTempToDisplay));
+        }
+        else if (singleTempToDisplay > -1) {
+            // We can deduce that the user is an international scum with poor taste in measurements
+            singletempView.setText(String.format("%d C", MiscHelper.fahrenheitToCentigrade(singleTempToDisplay)));
+        }
+        else {
+            // The user has entered no real measurement... Display XXX
+            singletempView.setText("XXX");  // TODO: Think of a better way to go about this....
+        }
+
+        // Make the other two views disappear
+        tempViewsToDisable[0].setVisibility(View.INVISIBLE);
+        tempViewsToDisable[1].setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * A helper method taking the load of establishing the temperature fields if the user has entered
+     * multiple temperatures
+     */
+    private void establishMultiTempFields() {
         //TODO: Implement this with default temperatures based on tea type if times are not specified by
         // the user
         TextView[] tempViews = {brewingFragment.getMinTempView(), brewingFragment.getMaxTempView()};
         int[] brewTemps = {teaBeingViewed.getBrewMin(), teaBeingViewed.getBrewMax()};
         boolean imperialTemperatures = SettingsHelper.isTemperatureFahrenheit();
 
+        // Setting the single temp view so that it is just a dash
+        brewingFragment.getSingleTempView().setText("-");   // No need to worry bout internationalisation here
+
+        // Making visible and popilating the min and max temp entries
         for (int i = 0; i < tempViews.length; i++) {
-            if (brewTemps[i] > 0 && imperialTemperatures) {
+            tempViews[i].setVisibility(View.VISIBLE);   // Setting to visible just to ensure they are seen
+            if (imperialTemperatures) {
                 tempViews[i].setText(String.format("%d F", brewTemps[i]));
             }
-            else if (brewTemps[i] > 0) {
+            else {
                 tempViews[i].setText(String.format("%d C", MiscHelper.fahrenheitToCentigrade(brewTemps[i])));
             }
         }
     }
-
     /**
      * A helper method meant purely to increase coherency. Handles establishment of strength fields.
      */

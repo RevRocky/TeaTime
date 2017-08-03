@@ -15,4 +15,9 @@
         android:title="Item"
         android:visible="true"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/inStockViewTea"
+        android:checkable="true"
+        android:title="@string/InStock"
+        app:showAsAction="never" />
 </menu>

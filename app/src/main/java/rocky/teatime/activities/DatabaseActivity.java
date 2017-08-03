@@ -81,7 +81,7 @@ public class DatabaseActivity extends AppCompatActivity {
      */
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.dbmunu, menu);
+        inflater.inflate(R.menu.database_activity_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -317,7 +317,7 @@ public class DatabaseActivity extends AppCompatActivity {
                 Collections.sort(teaList, new Comparator<Tea>() {
                     @Override
                     public int compare(Tea teaOne, Tea teaTwo) {
-                        return ((Long) teaTwo.getId()).compareTo(teaTwo.getId());
+                        return ((Long) teaOne.getId()).compareTo(teaTwo.getId());
                     }
                 });
                 return teaList;

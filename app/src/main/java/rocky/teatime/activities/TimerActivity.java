@@ -60,8 +60,6 @@ public class TimerActivity extends AppCompatActivity {
             timeElapsed = (float) savedInstanceState.getDouble(TIME_GONE);
             progress = (float) savedInstanceState.getDouble(PROGRESS_KEY);
             step = (float) savedInstanceState.getDouble(STEP_KEY);
-
-            // TODO Explore best practises to launch the timer
         }
         else if (extras != null) {    // If it is not empty read the brew time, otherwise do nothing.
             startTime = extras.getInt(START_KEY);
@@ -127,7 +125,7 @@ public class TimerActivity extends AppCompatActivity {
      * @return Returns the intent associated with the alarm service created!
      */
     private Intent playAlarm() {
-        Intent alarmIntent = null;
+        Intent alarmIntent;
         boolean vibratePreference = SettingsHelper.isVibrateMode();
 
         // Does the user wish for their device to vibrate or not?
@@ -160,8 +158,6 @@ public class TimerActivity extends AppCompatActivity {
             return String.format("%d:0%d", minutes, seconds);   // Inserting a zero!
         }
     }
-
-    //TODO: Figure out how to best handle the thread that is running
 
     /**
      * Saves the current state of the timer so it can be recreated once we've rotated the screen
