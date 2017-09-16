@@ -1,12 +1,14 @@
 package rocky.teatime.helpers;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
 import rocky.teatime.R;
+import rocky.teatime.TeaTime;
 
 /**
  * A class containing some useful methods that help with things like creating alerts
@@ -70,8 +72,9 @@ public class AlertHelper {
      *                      be the same intent supplied when originally starting the service
      * @param killActivity If true it will also kill the parent activity
      */
-    public static void createServiceKillAlert(String message, final Activity applicationContext,
-                                              final Intent serviceIntent, final boolean killActivity) {
+    public static void createServiceAndNotificationKillAlert(String message, final Activity applicationContext,
+                                              final Intent serviceIntent, final boolean killActivity,
+                                                             final int notificationID) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(applicationContext);
         alertBuilder.setMessage(message);
         alertBuilder.setCancelable(false);
@@ -87,6 +90,12 @@ public class AlertHelper {
                 if (killActivity) {
                     applicationContext.finish();
                 }
+
+                //  Kill the notification
+                NotificationManager manager =
+                        (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                manager.cancel(notificationID);
             }
         });
         AlertDialog newAlert = alertBuilder.create();

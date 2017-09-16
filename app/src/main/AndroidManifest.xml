@@ -59,14 +59,13 @@
             android:name=".activities.SettingsActivity"
             android:label="Modify Settings"
             android:theme="@style/Theme.AppCompat.Light" />
-
+            <activity android:name=".activities.ViewTeaActivity"></activity>
         <!--             Now we introduce the services! -->
 
         <service
             android:name=".services.AlarmService"
             android:exported="false" />
 
-        <activity android:name=".activities.ViewTeaActivity"></activity>
     </application>
 
 </manifest>

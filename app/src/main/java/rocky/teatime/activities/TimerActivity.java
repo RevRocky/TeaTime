@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import rocky.teatime.helpers.SettingsHelper;
 import rocky.teatime.services.AlarmService;
 import rocky.teatime.services.VibratorService;
 
+import static android.support.v4.app.NotificationCompat.PRIORITY_DEFAULT;
 import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 
@@ -38,6 +41,8 @@ public class TimerActivity extends AppCompatActivity {
     private final String PROGRESS_KEY = "PROGRESS";
     private final String STEP_KEY = "STEP";
 
+    private boolean prematureHalt;   // Lets timer know if it is okay to keep the clock ticking.
+
     /**
      * Handles the creation of the activity and establishing necessary brewTime
      * @param savedInstanceState A standard activity creation bundle... with a steep time
@@ -50,6 +55,9 @@ public class TimerActivity extends AppCompatActivity {
         setContentView(R.layout.timer_layout);
         textProgress = (TextView) findViewById(R.id.txtProgress);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        // Initialise prematureHalt to false.
+        prematureHalt = false;
 
         // Reading the amount of time remaining from the bundle
         Bundle extras = getIntent().getExtras();
@@ -79,41 +87,47 @@ public class TimerActivity extends AppCompatActivity {
      */
     private void startTimer() {
 
-        // Initialise the thread and give it a method!
+        // Forgoing the anonymous class so I can stop the timer when I desire to.
         new Thread (new Runnable() {
             @Override
             public void run() {
                 while (progress <= 100f) {
-                    handler.post(new Runnable() {
-                        // Seems to be a pattern
-                        @Override
-                        public void run() {
-                            progressBar.setProgress(Math.round(progress));
-                            textProgress.setText(displayTimeLeft());   // Set the text with time left
-                        }
-                    });
-                    // Sleep for a bit
-                    try {
-                        Thread.sleep(100);
-                    }
-                    catch (InterruptedException e) {
-                        e.printStackTrace();    // Print the stack trace
-                    }
-                    // Lots of updating now. Also... Dave Dove would kill me for this...
-                    // or he'd dispatch Galal to kill me off.
-                    timeElapsed += .1f; // 100 milliseconds is 1-tenth of a second
-                    progress = timeElapsed / step;
-                }
 
+                    // Check to see if there is a premature halt.
+                    if (!prematureHalt) {
+                        handler.post(new Runnable() {
+                            // Seems to be a pattern
+                            @Override
+                            public void run() {
+                                progressBar.setProgress(Math.round(progress));
+                                textProgress.setText(displayTimeLeft());   // Set the text with time left
+                            }
+                        });
+                        // Sleep for a bit
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();    // Print the stack trace
+                        }
+                        // Lots of updating now. Also... Dave Dove would kill me for this...
+                        // or he'd dispatch Galal to kill me off.
+                        timeElapsed += .1f; // 100 milliseconds is 1-tenth of a second
+                        progress = timeElapsed / step;
+                    }
+                    else {
+                        return;     // The timer has been ordered to stop prematurely. We must return.
+                    }
+                }
                 final Intent alarmIntent = playAlarm();    // I really don't like to have length of inner classes be long....
-                NotificationHelper.generateAppReturnNotification(TimerActivity.this, getResources().getString(R.string.TeaReady),
-                        PRIORITY_HIGH);
+
                 // What if we run just the alert helper on the ui thread?
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        AlertHelper.createServiceKillAlert(getResources().getString(R.string.TeaReady),
-                                TimerActivity.this, alarmIntent, true);
+                        final int notificationID = NotificationHelper.generateAppReturnNotification(TimerActivity.this,
+                                getResources().getString(R.string.TeaReady), PRIORITY_DEFAULT);
+                        AlertHelper.createServiceAndNotificationKillAlert(getResources().getString(R.string.TeaReady),
+                                TimerActivity.this, alarmIntent, true, notificationID);
                     }
                 });
             }
@@ -138,6 +152,15 @@ public class TimerActivity extends AppCompatActivity {
         }
         startService(alarmIntent);
         return alarmIntent;
+    }
+
+    /**
+     * If the user hits the cancel button this should bring them back to the main database screen.
+     * @param view View object encapsulating the button hit. We disregard this.
+     */
+    public void cancelBrew(View view) {
+        prematureHalt = true;   // We are prematurely halting the timer.
+        finish();   // Finish the activity
     }
 
     /**

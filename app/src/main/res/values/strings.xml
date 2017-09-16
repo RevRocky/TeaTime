@@ -77,4 +77,7 @@
     <string name="Yes">Yes</string>
     <string name="No">No</string>
 
+    <!-- Uncategorised Strings -->
+    <string name="Cancel">Stop Timer</string>
+
 </resources>
