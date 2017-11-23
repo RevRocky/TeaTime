@@ -289,7 +289,7 @@ public class AddTeaActivity extends AppCompatActivity {
 
     /**
      * Reads the user's preference for strength. If they prefer metric measurments itr is converted
-     * into Imperial units for storage.
+     * into imperial units for storage.
      */
     protected void readStrengthField() {
         EditText currentField = (EditText) findViewById(R.id.brewStrength);

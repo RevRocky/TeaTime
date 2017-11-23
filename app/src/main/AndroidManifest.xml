@@ -10,6 +10,11 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
 
+    <!-- Wake Lock is used to keep the timer counting down -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:name=".TeaTime"
         android:allowBackup="true"
@@ -60,10 +65,15 @@
             android:label="Modify Settings"
             android:theme="@style/Theme.AppCompat.Light" />
             <activity android:name=".activities.ViewTeaActivity"></activity>
+
         <!--             Now we introduce the services! -->
 
         <service
             android:name=".services.AlarmService"
+            android:exported="false" />
+
+        <service
+            android:name=".services.VibratorService"
             android:exported="false" />
 
     </application>

@@ -3,9 +3,11 @@ package rocky.teatime.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,7 +23,7 @@ import static android.support.v4.app.NotificationCompat.PRIORITY_HIGH;
 
 
 /**
- * An actiity class wich runs the timer and the alarm for when the user's tea is ready
+ * An actiity class wich runs the timer and the alarm for when the user's tea is ready.
  * @Author Rocky Petkov
  * @version Semi-Final
  */
@@ -40,6 +42,8 @@ public class TimerActivity extends AppCompatActivity {
     private final String TIME_GONE = "TIME_GONE";
     private final String PROGRESS_KEY = "PROGRESS";
     private final String STEP_KEY = "STEP";
+
+    private final String WAKE_LOCK_KEY = "TEA_TIMER_WAKE_LOCK";
 
     private boolean prematureHalt;   // Lets timer know if it is okay to keep the clock ticking.
 
@@ -91,6 +95,14 @@ public class TimerActivity extends AppCompatActivity {
         new Thread (new Runnable() {
             @Override
             public void run() {
+
+                // Get the Wake Lock
+                PowerManager powerManager = (PowerManager)getSystemService(POWER_SERVICE);
+                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                        WAKE_LOCK_KEY);
+                wakeLock.acquire();
+
+                // Begin the main loop
                 while (progress <= 100f) {
 
                     // Check to see if there is a premature halt.
@@ -109,15 +121,21 @@ public class TimerActivity extends AppCompatActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();    // Print the stack trace
                         }
-                        // Lots of updating now. Also... Dave Dove would kill me for this...
+                        // Lots of updatin]g now. Also... Dave Dove would kill me for this...
                         // or he'd dispatch Galal to kill me off.
                         timeElapsed += .1f; // 100 milliseconds is 1-tenth of a second
                         progress = timeElapsed / step;
                     }
                     else {
-                        return;     // The timer has been ordered to stop prematurely. We must return.
+                        // Ensuring we have the wakelock
+
+                        if (wakeLock.isHeld()) {
+                            return;     // The timer has been ordered to stop prematurely. We must return.
+                        }
                     }
                 }
+
+                // Check if the wake lock is held
                 final Intent alarmIntent = playAlarm();    // I really don't like to have length of inner classes be long....
 
                 // What if we run just the alert helper on the ui thread?
@@ -130,6 +148,11 @@ public class TimerActivity extends AppCompatActivity {
                                 TimerActivity.this, alarmIntent, true, notificationID);
                     }
                 });
+
+                // Ensuring we hold the wakelock before releasing it
+                if (wakeLock.isHeld()) {
+                    wakeLock.release();
+                }
             }
         }).start();
     }

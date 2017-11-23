@@ -96,7 +96,6 @@ public class DataSource {
             values.put(allColumns[9], ~DatabaseHelper.BOOLEAN_TRUE);   // Doing a bitwise not. So we aren't actually storing zero
         }
 
-
         long insertId = database.insert(DatabaseHelper.TABLE_TEAS, null, values);
         Cursor cursor = database.query(DatabaseHelper.TABLE_TEAS, allColumns,
                 String.format("%s = %d", allColumns[0], insertId), null, null, null, null);

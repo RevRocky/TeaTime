@@ -30,6 +30,7 @@
 
     <!-- Sorting Methods -->
     <string name="SortBy">Sort By:</string>
+    <string name="SortByVerbose">Database Sorting Criteria</string>
     <string name="Type">Type</string>
     <string name="NameAZ">Name A-Z</string>
     <string name="NameZA">Name Z-A</string>

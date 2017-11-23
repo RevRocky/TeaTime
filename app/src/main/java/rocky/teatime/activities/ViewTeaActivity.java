@@ -1,5 +1,6 @@
 package rocky.teatime.activities;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
@@ -18,17 +19,20 @@ import android.view.WindowManager;
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
 import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.fragments.alerts.TeaDeletionConfirmationAlert;
 import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;
+import rocky.teatime.interfaces.AlertListenerInterface;
 
-public class ViewTeaActivity extends AppCompatActivity {
+public class ViewTeaActivity extends AppCompatActivity implements AlertListenerInterface {
 
     public static final int VIEW_TEA_REQUEST = 859;     // You wanna see some magic?
     public static final int DATABASE_CHANGE_FLAG = 562; // Completely Magic Number
     public static final int NO_DB_CHANGE_FLAG = 563;    // I wanna make you feel magical
 
-    TeaBasicsFragment basicsFragment;   // A reference to the fragment tracking all of the basics.
-    private boolean editedStatus;       // Tracks whether the tea has been edited.
+    private TeaBasicsFragment basicsFragment;   // A reference to the fragment tracking all of the basics.
+    private boolean editedStatus;               // Tracks whether the tea has been edited.
+    private Menu menu;                          // Reference to the menu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class ViewTeaActivity extends AppCompatActivity {
         // Establishing the particulars of the action bar
         constructActionBar();
         colourStatusBar();
+
     }
 
     /**
@@ -57,6 +62,7 @@ public class ViewTeaActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tea_view_menu, menu);
+        this.menu = menu;                           // Getting that sweet reference so I can use it later!
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -105,31 +111,48 @@ public class ViewTeaActivity extends AppCompatActivity {
                 editedStatus = true;
                 return true;
             case R.id.delete_item_choice:
-                deleteTea(teaBeingViewed);
+                deleteTea();
+                return true;
+            case R.id.inStockCheckEditTea:
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
     /**
-     * Removes the selected tea from the database.
-     * @param teaToDelete Tea we wish to remove from the data base.
+     * All we can do here is ask for confirmation. The real work is done in the on Positive and on Negative
+     * click methods.
      */
-    private void deleteTea(Tea teaToDelete) {
-        teaToDelete.createTeaRemoveAlert(this);
-
-        // Notify the previous activity that we've made a change to the database and then quit
-        Intent returnIntent = new Intent();
-
-        // If the tea has actually been deleted we will have raised a flag in the ID.
-        if (teaToDelete.getId() == Tea.TEA_REMOVED_ID_FLAG) {
-            setResult(DATABASE_CHANGE_FLAG, returnIntent);
-            finish();
-        }
+    private void deleteTea() {
+        DialogFragment deletionConfirmation = new TeaDeletionConfirmationAlert();
+        deletionConfirmation.show(getFragmentManager(), "DELETE");
     }
 
     /**
-     * A central clearing house for handling all results of dispatched activities
+     * This method should only be called in order to remove a tea object from the database
+     * @param fragment The Confirmation Alert Fragment
+     */
+    public void onDialoguePositiveClick(DialogFragment fragment) {
+        Tea teaBeingDeleted = basicsFragment.getTeaBeingViewed();
+        teaBeingDeleted.removeFromDB();
+
+        // Preparing to return
+        Intent returnIntent = new Intent();
+        setResult(DATABASE_CHANGE_FLAG, returnIntent);  // Attaching the change flag
+        finish();
+    }
+
+    /**
+     * The user doesn't really want to do anything so we can simply return from the method
+     * @param fragment The fragment which issued the request to delete the tea
+     */
+    public void onDialogueNegativeClick(DialogFragment fragment) {
+        return;
+    }
+
+    /**
+
      * @param requestCode A code unique to the activity dispatched
      * @param resultCode A code informing us of whether or not the result was successful
      * @param data A payload containing information from the dispatch activity

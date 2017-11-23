@@ -37,6 +37,7 @@ public class Tea {
     public static String TEA_PAYLOAD_KEY = "Cargo";
     public static String NO_PICTURE_FLAG = "NULL";
     public static int EMPTY_ENTRY_FLAG = -1;
+    public static String TEA_ID_FLAG = "ID";
 
     /**
      * Creates a tea object from a given database entry
@@ -92,44 +93,9 @@ public class Tea {
     }
 
     /**
-     * Asks the user if they are sure to remove the tea from the data base. This method only handles
-     * the display of the alert, the actual heavy lifting is done on the onPositiveButton() method
-     * @param activityContext The application context of the current activity
-     */
-    public void createTeaRemoveAlert(Context activityContext) {
-        // Due to the nature of this method (the choice of the button really quite mattering
-        // I will forgo placing this alert in the AlertHelper Class
-        Resources resources = activityContext.getResources();
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activityContext);
-        alertBuilder.setMessage(resources.getString(R.string.DeletionAffirmation));
-        alertBuilder.setCancelable(false);
-
-        // Constructing the buttons
-        alertBuilder.setPositiveButton(resources.getString(R.string.Yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();        // We just want to close our dialogue
-                removeDBEntry();
-            }
-        });
-
-        // Constructing the buttons
-        alertBuilder.setNegativeButton(resources.getString(R.string.No), new DialogInterface.OnClickListener(){
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();        // We just want to close our dialogue
-
-            }
-        });
-
-        AlertDialog newAlert = alertBuilder.create();
-        newAlert.show();
-    }
-
-    /**
      * Removes the database entry corresponding to this Tea object
      */
-    private void removeDBEntry() {
+    public void removeFromDB() {
         Context appContext = TeaTime.getAppContext();
         DataSource dbInterface = new DataSource(appContext);
         dbInterface.open();

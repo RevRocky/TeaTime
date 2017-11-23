@@ -270,4 +270,13 @@ public class TeaBasicsFragment extends Fragment {
             buildBrewFragment();
         }
     }
+
+    /**
+     * A bit silly that this method needs to be included but, the Tea object is now two levels of
+     * indirection away from the user.
+     * @return Whether the tea being viewed is in stock or nto .
+     */
+    public boolean isTeaInStock() {
+        return teaBeingViewed.isInStock();
+    }
 }

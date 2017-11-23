@@ -1,8 +1,10 @@
 package rocky.teatime.activities;
 
 import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,8 @@ import rocky.teatime.database.DataSource;
 import rocky.teatime.database.TeaStuff.Tea;
 import rocky.teatime.database.visualise.DatabaseVisualiser;
 import rocky.teatime.database.visualise.GridVisualiser;
+import rocky.teatime.helpers.AlertHelper;
+import rocky.teatime.helpers.SettingsHelper;
 
 public class DatabaseActivity extends AppCompatActivity {
 
@@ -31,11 +35,11 @@ public class DatabaseActivity extends AppCompatActivity {
 
     // Some short integer codes which we can set to ensure the database is sorted how the user
     // wishes it.
-    private static final byte SORT_BY_TYPE = 0;
-    private static final byte SORT_BY_AZ = 1;
-    private static final byte SORT_BY_ZA = 2;
-    private static final byte SORT_BY_NEW = 3;
-    private static final byte SORT_BY_OLD = 4;
+    public static final byte SORT_BY_TYPE = 0;
+    public static final byte SORT_BY_AZ = 1;
+    public static final byte SORT_BY_ZA = 2;
+    public static final byte SORT_BY_NEW = 3;
+    public static final byte SORT_BY_OLD = 4;
 
     private static final boolean CHANGED_DB_SORT = true;
 
@@ -44,7 +48,7 @@ public class DatabaseActivity extends AppCompatActivity {
     private RecyclerView recyclerView;      // The overall recycler view object
     private DatabaseVisualiser visualiser;  // The specific visualier used to display things from the database
     private RecyclerView.LayoutManager layoutManager;
-    private byte sortType = SORT_BY_OLD;    // Default to order added to DB first.
+    private byte sortType;
 
 
     /**
@@ -65,9 +69,12 @@ public class DatabaseActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this, GRID_WIDTH);
         recyclerView.setLayoutManager(layoutManager);
 
+        // Loading the user's preferred sort from a preferences file.
+        sortType = SettingsHelper.getPreferredSortType();
+
         // Opening our database helper
         dbHelper = new DataSource(this);
-        updateTeaList(!CHANGED_DB_SORT);
+        updateTeaList(CHANGED_DB_SORT);
 
         // Registering our recycler view for a context menu
         registerForContextMenu(recyclerView);
@@ -107,22 +114,27 @@ public class DatabaseActivity extends AppCompatActivity {
                 return true;
             case R.id.TypeSort:
                 sortType = SORT_BY_TYPE;
+                SettingsHelper.savePreferredSortType(sortType); // Save user's preference!
                 updateTeaList(CHANGED_DB_SORT);
                 return true;
             case R.id.AtoZSort:
                 sortType = SORT_BY_AZ;
+                SettingsHelper.savePreferredSortType(sortType); // Save user's preference!
                 updateTeaList(CHANGED_DB_SORT);
                 return true;
             case R.id.ZtoASort:
                 sortType = SORT_BY_ZA;
+                SettingsHelper.savePreferredSortType(sortType); // Save user's preference!
+                updateTeaList(CHANGED_DB_SORT);
+                return true;
+            case R.id.newestFirst:
+                sortType = SORT_BY_NEW;
+                SettingsHelper.savePreferredSortType(sortType); // Save user's preference!
                 updateTeaList(CHANGED_DB_SORT);
                 return true;
             case R.id.oldestFirst:
                 sortType = SORT_BY_OLD;
-                updateTeaList(CHANGED_DB_SORT);
-                return true;
-            case R.id.newestFirst:
-                sortType = SORT_BY_OLD;
+                SettingsHelper.savePreferredSortType(sortType); // Save user's preference!
                 updateTeaList(CHANGED_DB_SORT);
                 return true;
 
@@ -156,8 +168,6 @@ public class DatabaseActivity extends AppCompatActivity {
             case R.id.brewTeaOption:
                 launchBrewScreen(visualiser.getTea(position));
                 return true;
-            case R.id.deleteTeaOption:
-                deleteTea(visualiser.getTea(position));
             default:
                 // Functionality not implemented yet. So make toast
                 Toast.makeText(this, "Feature Not Implemented", Toast.LENGTH_SHORT).show();
@@ -204,19 +214,6 @@ public class DatabaseActivity extends AppCompatActivity {
             timerIntent.putExtra(TimerActivity.START_KEY, teaToBrew.getBrewTime());
         }
         startActivity(timerIntent);     // Start the timer activity!
-    }
-
-    /**
-     * Removes the specified tea from the database
-     *
-     * @param teaToDelete Tea we wish to remove from the database
-     */
-    private void deleteTea(Tea teaToDelete) {
-        teaToDelete.createTeaRemoveAlert(this);
-
-        if (teaToDelete.getId() == Tea.TEA_REMOVED_ID_FLAG) {
-            updateTeaList(!CHANGED_DB_SORT);    // We only need to update the list if we've deleted something
-        }
     }
 
     /**
@@ -286,18 +283,20 @@ public class DatabaseActivity extends AppCompatActivity {
                 });
                 return teaList;
             case (SORT_BY_AZ):
+                // Converting names so the sort is agnostic to case the name is written
                 Collections.sort(teaList, new Comparator<Tea>() {
                     @Override
                     public int compare(Tea teaOne, Tea teaTwo) {
-                        return teaOne.getName().compareTo(teaTwo.getName());
+                        return teaOne.getName().toLowerCase().compareTo(teaTwo.getName().toLowerCase());
                     }
                 });
                 return teaList;
             case (SORT_BY_ZA):
+                // Converting names so that the sort is agnostic to the casing of the name
                 Collections.sort(teaList, new Comparator<Tea>() {
                     @Override
                     public int compare(Tea teaOne, Tea teaTwo) {
-                        return teaOne.getName().compareTo(teaTwo.getName());
+                        return teaOne.getName().toLowerCase().compareTo(teaTwo.getName().toLowerCase());
                     }
                 });
                 Collections.reverse(teaList);
@@ -311,13 +310,14 @@ public class DatabaseActivity extends AppCompatActivity {
                         return ((Long) teaOne.getId()).compareTo(teaTwo.getId());
                     }
                 });
+                Collections.reverse(teaList);
                 return teaList;
             case (SORT_BY_OLD):
                 // Again ID is a perfect indicator of when something was added
                 Collections.sort(teaList, new Comparator<Tea>() {
                     @Override
                     public int compare(Tea teaOne, Tea teaTwo) {
-                        return ((Long) teaOne.getId()).compareTo(teaTwo.getId());
+                        return  ((Long) teaOne.getId()).compareTo(teaTwo.getId());
                     }
                 });
                 return teaList;
