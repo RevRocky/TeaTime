@@ -69,6 +69,7 @@ public class EditTeaActivity extends AddTeaActivity {
         populateStrengthField();        // Populates the strength field
         displayTeaImage();              // Display Thumbnail should there be one.
         spinTypeSpinners();             // Lastly we handle the type spinners!
+        currentPhotoPath = teaInQuestion.getPicLocation();  // Setting the current photo path to be that of our tea
     }
 
     /**
@@ -195,8 +196,9 @@ public class EditTeaActivity extends AddTeaActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.inStockCheckEditTea:
-                item.setChecked(!item.isChecked());         // Flipping the checkbox
-                teaInQuestion.setInStock(item.isChecked()); // Instock should reflect the state of the menu.
+                boolean oldStock = teaInQuestion.isInStock();  // Writing it this way for clarity
+                item.setChecked(!oldStock);
+                teaInQuestion.setInStock(!oldStock);
                 return true;
         }
         return false;       // The menu checked does not match any known menu item.

@@ -3,6 +3,10 @@ package rocky.teatime.helpers;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.widget.ImageView;
 
 import java.io.FileOutputStream;
@@ -164,5 +168,52 @@ public class ImageHelper {
         finally {
             view.setImageBitmap(image);   // Setting the view to be the scaled image
         }
+    }
+
+    /**
+     * Fits a bitmap of a black and white version of the supplied image to a square image view.
+     * This allows us to grey out an image when a given tea is not in stock.
+     * @param view View we wish to fit the image into
+     * @param filePath Path to the file we wish to fit.
+     */
+    public static void fitImagetoSquareViewBW(SquareImageView view, String filePath) {
+        Bitmap image = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = false;
+        // Decoding full size image
+        try {
+            image = decodeFile(filePath, options);
+            image = colourToGreyScale(image);
+        }
+        catch (OutOfMemoryError e) {    // Incase we run out of memory decoding the bitmap, this is for safety!
+            options.inSampleSize = 2;
+            image = decodeFile(filePath, options);
+        }
+        finally {
+            view.setImageBitmap(image);   // Setting the view to be the scaled image
+        }
+    }
+
+    /**
+     * Turns an image into a black and white version of itself.
+     * @param colourImage This is the colour version of the image we wish to transform.
+     * @return A greyscale version of the image supplied to the method.
+     */
+    public static Bitmap colourToGreyScale(Bitmap colourImage) {
+        ColorMatrix colourMatrix = new ColorMatrix();
+        colourMatrix.setSaturation(0.0f);       // Setting extremely low saturation!
+
+        // Making a filter based upon the above settings.
+        ColorMatrixColorFilter colourMatrixFilter = new ColorMatrixColorFilter(colourMatrix);
+
+        Paint paint = new Paint();
+        paint.setColorFilter(colourMatrixFilter);
+
+        Bitmap greyScaleImage = colourImage.copy(Bitmap.Config.ARGB_8888, true);
+
+        Canvas canvas = new Canvas(greyScaleImage); // Make a canvas based on the image
+        canvas.drawBitmap(greyScaleImage, 0, 0, paint);     // Draw the bitmap put through the filter
+        return greyScaleImage;
+
     }
 }

@@ -278,7 +278,7 @@ public class AddTeaActivity extends AppCompatActivity {
      */
     protected void readPictureLocation() {
         // Ensuring the location of the picture is saved
-        if (currentPhotoPath == null) {
+        if (currentPhotoPath == null ) {
             teaInQuestion.setPicLocation(Tea.NO_PICTURE_FLAG);
         }
         else {

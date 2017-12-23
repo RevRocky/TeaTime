@@ -34,6 +34,8 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
     private boolean editedStatus;               // Tracks whether the tea has been edited.
     private Menu menu;                          // Reference to the menu
 
+    private static final int inStockMenuIndex = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,6 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
         // Establishing the particulars of the action bar
         constructActionBar();
         colourStatusBar();
-
     }
 
     /**
@@ -63,6 +64,7 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.tea_view_menu, menu);
         this.menu = menu;                           // Getting that sweet reference so I can use it later!
+        tickInStockBox();                           // Placing this here so it's run once the menu is inflated!
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -98,6 +100,15 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
     }
 
     /**
+     * Sets the in stock box so that it matches the current status of the tea in question.
+     */
+    private void tickInStockBox() {
+        MenuItem inStockItem = menu.getItem(inStockMenuIndex);
+        inStockItem.setChecked(basicsFragment.getTeaBeingViewed().isInStock());
+    }
+
+
+    /**
      * A central clearing house for selcting all menu options
      * @param item The menu item selected
      * @return True if the operation is successful
@@ -113,8 +124,10 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
             case R.id.delete_item_choice:
                 deleteTea();
                 return true;
-            case R.id.inStockCheckEditTea:
-
+            case R.id.in_stock_view_tea:
+                flipTeaStock(teaBeingViewed);
+                editedStatus = true;        // Setting the status so the database view can be updated
+                // TODO: Explore greying out the image in this activity as well as the main one.
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -127,6 +140,18 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
     private void deleteTea() {
         DialogFragment deletionConfirmation = new TeaDeletionConfirmationAlert();
         deletionConfirmation.show(getFragmentManager(), "DELETE");
+    }
+
+    /**
+     * Flips the boolean flag on the tea in question so that it the correct information concerning
+     * whether or not the tea is in stock is in place. This also handles saving the updated tea to
+     * the database.
+     * @param teaBeingFlipped The tea we are setting as being in stock.
+     */
+    private void flipTeaStock(Tea teaBeingFlipped) {
+        teaBeingFlipped.setInStock(!teaBeingFlipped.isInStock());
+        teaBeingFlipped.updateDBEntry(this);
+        tickInStockBox();                   // Tick the box. Update the UI!
     }
 
     /**
@@ -162,7 +187,7 @@ public class ViewTeaActivity extends AppCompatActivity implements AlertListenerI
             case (EditTeaActivity.EDIT_TEA_REQUEST):
                 Tea newTeaBeingViewed = fetchEditedTeaObject();
 
-                // If we actually get something from the database (we pretty much always should
+                // If we actually get something from the database (we pretty much always should)
                 if (newTeaBeingViewed != null) {
                     basicsFragment.setTeaBeingViewed(newTeaBeingViewed);
                     // I'll take the penalty of always executing these methods for the time being

@@ -62,7 +62,14 @@ public class GridVisualiser extends DatabaseVisualiser {
 
         // If there is an image we should display it. Otherwise the default image wil display on its
         // own
-        if (!currentTea.getPicLocation().equals("NULL")) {
+        // TODO: This is where I check if the tea is in stock and grey it out.
+
+
+        if ((!currentTea.isInStock()) && (!currentTea.getPicLocation().equals(("NULL")))) {
+            // If the tea is out of stock grey out the image.
+            rocky.teatime.helpers.ImageHelper.fitImagetoSquareViewBW(itemHolder.getTeaPic(), currentTea.getPicLocation());
+        }
+        else if (!currentTea.getPicLocation().equals("NULL")) {
             rocky.teatime.helpers.ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
         // Setting the footer colour

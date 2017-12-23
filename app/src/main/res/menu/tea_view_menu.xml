@@ -16,7 +16,7 @@
         android:visible="true"
         app:showAsAction="always" />
     <item
-        android:id="@+id/inStockViewTea"
+        android:id="@+id/in_stock_view_tea"
         android:checkable="true"
         android:title="@string/InStock"
         app:showAsAction="never" />
