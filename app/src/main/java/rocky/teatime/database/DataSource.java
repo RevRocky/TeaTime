@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteException;
 
 import java.util.ArrayList;
 
-import rocky.teatime.database.TeaStuff.Tea;
-import rocky.teatime.database.TeaStuff.TeaType;
+import rocky.teatime.database.teastuff.Tea;
+import rocky.teatime.database.teastuff.TeaType;
 
 /**
  * Acts as an intermediary between the user/application and the

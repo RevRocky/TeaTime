@@ -3,6 +3,9 @@ package rocky.teatime.database.visualise;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +16,11 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 
 import rocky.teatime.R;
+import rocky.teatime.TeaTime;
 import rocky.teatime.activities.ViewTeaActivity;
-import rocky.teatime.database.TeaStuff.JsonTea;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.JsonTea;
+import rocky.teatime.database.teastuff.Tea;
+import rocky.teatime.helpers.ImageHelper;
 import rocky.teatime.widgets.ItemHolder;
 
 /**
@@ -65,13 +70,22 @@ public class GridVisualiser extends DatabaseVisualiser {
         // TODO: This is where I check if the tea is in stock and grey it out.
 
 
-        if ((!currentTea.isInStock()) && (!currentTea.getPicLocation().equals(("NULL")))) {
-            // If the tea is out of stock grey out the image.
-            rocky.teatime.helpers.ImageHelper.fitImagetoSquareViewBW(itemHolder.getTeaPic(), currentTea.getPicLocation());
+        if (!currentTea.getPicLocation().equals("NULL") && currentTea.isInStock()) {
+            // Tea has a picture and it is in stock.
+            ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
         else if (!currentTea.getPicLocation().equals("NULL")) {
-            rocky.teatime.helpers.ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), currentTea.getPicLocation());
+            // Implicily including the !currentTea.isInStock() call...
+            ImageHelper.fitImagetoSquareViewBW(itemHolder.getTeaPic(), currentTea.getPicLocation());
         }
+        else if (!currentTea.isInStock()) {
+            // Tea has no picture and is not in stock. show the picture with the cross
+            Resources res = TeaTime.getAppContext().getResources();
+            Bitmap genericOOSImage = BitmapFactory.decodeResource(res, R.drawable.generic_tea_img_out_of_stock); // Decode bmp
+
+            ImageHelper.fitImagetoSquareView(itemHolder.getTeaPic(), res, R.drawable.generic_tea_img_out_of_stock);
+        }
+
         // Setting the footer colour
         itemHolder.setFooterColour(currentTea.getColour());
 

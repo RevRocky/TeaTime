@@ -3,12 +3,12 @@ package rocky.teatime.activities;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +24,8 @@ import java.util.Date;
 import java.util.List;
 
 import rocky.teatime.R;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.exceptions.NotEnoughInfoException;
-import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.ImageHelper;
 import rocky.teatime.helpers.MiscHelper;
@@ -127,14 +126,16 @@ public class AddTeaActivity extends AppCompatActivity {
                 ImageButton imgButton = (ImageButton) findViewById(R.id.imageIcon);
 
 
-                // Getting the width and height of the largest place we'd place this image
-                // NOTE: This is the screen in the viewTeaActivity
-                Pair<Integer, Integer> biggestImgSize = new Pair<>(TeaBasicsFragment.getImageHeight(),
-                        MiscHelper.getScreenWidth(this));
+                // Opening the original sized file
+                Bitmap originalImage = BitmapFactory.decodeFile(currentPhotoPath);
 
-                Bitmap thumbnail = ImageHelper.saveImageAsSize(currentPhotoPath, biggestImgSize.first,
-                        biggestImgSize.second);
-                imgButton.setImageBitmap(thumbnail);
+                // Cropping the image and saving it to the database.
+                Bitmap croppedImage = ImageHelper.cropImageCentre(originalImage);
+                ImageHelper.saveImage(currentPhotoPath, croppedImage);
+
+
+                // Creating an appropriate thumbnail
+                imgButton.setImageBitmap(croppedImage);
             }
         }
     }

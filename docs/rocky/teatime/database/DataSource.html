@@ -185,9 +185,9 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a></code></td>
+<td class="colFirst"><code><a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#createEntry-java.lang.String-rocky.teatime.database.TeaStuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">createEntry</a></span>(java.lang.String&nbsp;teaName,
-           <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.TeaStuff">TeaType</a>&nbsp;teaType,
+           <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.teastuff">TeaType</a>&nbsp;teaType,
            int&nbsp;brewTime,
            int&nbsp;brewSecond,
            int&nbsp;minTemp,
@@ -200,18 +200,18 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#deleteEntry-rocky.teatime.database.TeaStuff.Tea-">deleteEntry</a></span>(<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&nbsp;tea)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#deleteEntry-rocky.teatime.database.TeaStuff.Tea-">deleteEntry</a></span>(<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&nbsp;tea)</code>
 <div class="block">Deletes the database entry corresponding to the supplied tea object</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#getAllEntries--">getAllEntries</a></span>()</code>
 <div class="block">Retrieves all entries from the database as Tea objects.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a></code></td>
+<td class="colFirst"><code><a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#getEntry-long-">getEntry</a></span>(long&nbsp;entryID)</code>
 <div class="block">Retuerns the Tea object from the database with an ID matching that of the supplied ID.</div>
 </td>
@@ -229,7 +229,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code>private <a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a></code></td>
+<td class="colFirst"><code>private <a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#readEntry-android.database.Cursor-">readEntry</a></span>(android.database.Cursor&nbsp;cursor)</code>
 <div class="block">Reads a database entry into a Tea object</div>
 </td>
@@ -238,7 +238,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../rocky/teatime/database/DataSource.html#updateEntry-long-java.lang.String-rocky.teatime.database.TeaStuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">updateEntry</a></span>(long&nbsp;id,
            java.lang.String&nbsp;teaName,
-           <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.TeaStuff">TeaType</a>&nbsp;teaType,
+           <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.teastuff">TeaType</a>&nbsp;teaType,
            int&nbsp;brewTime,
            int&nbsp;brewSecond,
            int&nbsp;minTemp,
@@ -366,14 +366,14 @@ extends java.lang.Object</pre>
 <div class="block">Responsibly closes the database</div>
 </li>
 </ul>
-<a name="createEntry-java.lang.String-rocky.teatime.database.TeaStuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">
+<a name="createEntry-java.lang.String-rocky.teatime.database.teastuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createEntry</h4>
-<pre>public&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&nbsp;createEntry(java.lang.String&nbsp;teaName,
-                       <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.TeaStuff">TeaType</a>&nbsp;teaType,
+<pre>public&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&nbsp;createEntry(java.lang.String&nbsp;teaName,
+                       <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.teastuff">TeaType</a>&nbsp;teaType,
                        int&nbsp;brewTime,
                        int&nbsp;brewSecond,
                        int&nbsp;minTemp,
@@ -398,7 +398,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="updateEntry-long-java.lang.String-rocky.teatime.database.TeaStuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">
+<a name="updateEntry-long-java.lang.String-rocky.teatime.database.teastuff.TeaType-int-int-int-int-java.lang.String-float-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -406,7 +406,7 @@ extends java.lang.Object</pre>
 <h4>updateEntry</h4>
 <pre>public&nbsp;void&nbsp;updateEntry(long&nbsp;id,
                         java.lang.String&nbsp;teaName,
-                        <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.TeaStuff">TeaType</a>&nbsp;teaType,
+                        <a href="../../../rocky/teatime/database/TeaStuff/TeaType.html" title="enum in rocky.teatime.database.teastuff">TeaType</a>&nbsp;teaType,
                         int&nbsp;brewTime,
                         int&nbsp;brewSecond,
                         int&nbsp;minTemp,
@@ -435,7 +435,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>readEntry</h4>
-<pre>private&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&nbsp;readEntry(android.database.Cursor&nbsp;cursor)</pre>
+<pre>private&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&nbsp;readEntry(android.database.Cursor&nbsp;cursor)</pre>
 <div class="block">Reads a database entry into a Tea object</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -451,7 +451,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getEntry</h4>
-<pre>public&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&nbsp;getEntry(long&nbsp;entryID)
+<pre>public&nbsp;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&nbsp;getEntry(long&nbsp;entryID)
              throws android.database.sqlite.SQLiteException</pre>
 <div class="block">Retuerns the Tea object from the database with an ID matching that of the supplied ID.</div>
 <dl>
@@ -471,7 +471,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getAllEntries</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&gt;&nbsp;getAllEntries()</pre>
+<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&gt;&nbsp;getAllEntries()</pre>
 <div class="block">Retrieves all entries from the database as Tea objects.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -479,13 +479,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="deleteEntry-rocky.teatime.database.TeaStuff.Tea-">
+<a name="deleteEntry-rocky.teatime.database.teastuff.Tea-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>deleteEntry</h4>
-<pre>public&nbsp;void&nbsp;deleteEntry(<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.TeaStuff">Tea</a>&nbsp;tea)</pre>
+<pre>public&nbsp;void&nbsp;deleteEntry(<a href="../../../rocky/teatime/database/TeaStuff/Tea.html" title="class in rocky.teatime.database.teastuff">Tea</a>&nbsp;tea)</pre>
 <div class="block">Deletes the database entry corresponding to the supplied tea object</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>

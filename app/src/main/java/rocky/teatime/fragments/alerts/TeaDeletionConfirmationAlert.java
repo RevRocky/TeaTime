@@ -9,8 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
 import rocky.teatime.R;
-import rocky.teatime.database.DataSource;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.interfaces.AlertListenerInterface;
 
 /**

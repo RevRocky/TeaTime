@@ -17,9 +17,11 @@ import rocky.teatime.widgets.SquareImageView;
 import static android.graphics.BitmapFactory.decodeFile;
 
 /**
- * Created by rocky on 17-07-07.
+ * A lovely class which has many, many, many different methods pertaining to the manipulation of
+ * images.
+ * @author Rocky Petkov
+ * @version 1.0
  */
-
 public class ImageHelper {
     /**
      * Prepares an appropriately sized bitmap thumbnail of the image which has just been
@@ -136,16 +138,17 @@ public class ImageHelper {
         Bitmap scaledImage = null;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2;             // Shrink image by 2?
-        options.inJustDecodeBounds = true;
+        options.inJustDecodeBounds = false;
         try {
             scaledImage = BitmapFactory.decodeResource(resources, resourceID, options);
         }
         catch (Error | Exception e) {
-            e.printStackTrace();
-
+            options.inSampleSize = 2;
+            scaledImage = BitmapFactory.decodeResource(resources, resourceID);
         }
-        view.setImageBitmap(scaledImage);   // Setting the view to be the scaled image
+        finally {
+            view.setImageBitmap(scaledImage);   // Setting the view to be the scaled image
+        }
     }
 
     /**
@@ -215,5 +218,35 @@ public class ImageHelper {
         canvas.drawBitmap(greyScaleImage, 0, 0, paint);     // Draw the bitmap put through the filter
         return greyScaleImage;
 
+    }
+
+    /**
+     * Returns an NxN sized image cropped out of the centre of the original image where N is the
+     * length of the smaller side of the image.
+     * @param originalImage An NxM (or MxN) image that we wish to crop, where M is the length of
+     *                      the longer side and N is the length of the shorter side.
+     * @return A cropped version of the original image with just the NxN centre still remaining.
+     * If the original image is a square, it will return the original image.
+     */
+    public static Bitmap cropImageCentre(Bitmap originalImage) {
+        // Check to see if it's a a square image
+        int width = originalImage.getWidth();
+        int height = originalImage.getHeight();
+        int smallestEdgeLength;                 // Size ofsmallest edge
+
+        if (width == height) {
+            return originalImage;
+        }
+        else if (width > height) {
+            smallestEdgeLength = height;
+            int startPosX = ((width/2) - (smallestEdgeLength / 2));
+            return Bitmap.createBitmap(originalImage, startPosX, 0, smallestEdgeLength, smallestEdgeLength);
+        }
+        else {
+            // width < height
+            smallestEdgeLength = width;
+            int startPosY = ((height/2) - (smallestEdgeLength / 2));
+            return Bitmap.createBitmap(originalImage, 0, startPosY, smallestEdgeLength, smallestEdgeLength);
+        }
     }
 }

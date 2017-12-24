@@ -5,14 +5,10 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 
 import rocky.teatime.R;
-import rocky.teatime.TeaTime;
-import rocky.teatime.database.DataSource;
-import rocky.teatime.database.DatabaseHelper;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 
 /**
  * A class containing some useful methods that help with things like creating alerts

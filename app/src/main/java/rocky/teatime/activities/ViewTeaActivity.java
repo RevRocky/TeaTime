@@ -18,7 +18,7 @@ import android.view.WindowManager;
 
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.fragments.alerts.TeaDeletionConfirmationAlert;
 import rocky.teatime.fragments.tea_detail.TeaBasicsFragment;
 import rocky.teatime.helpers.AlertHelper;

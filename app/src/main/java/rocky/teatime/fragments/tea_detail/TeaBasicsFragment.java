@@ -1,8 +1,9 @@
 package rocky.teatime.fragments.tea_detail;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.audiofx.BassBoost;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -18,8 +19,9 @@ import com.google.gson.Gson;
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
 import rocky.teatime.activities.TimerActivity;
-import rocky.teatime.database.TeaStuff.JsonTea;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.JsonTea;
+import rocky.teatime.database.teastuff.Tea;
+import rocky.teatime.helpers.ImageHelper;
 import rocky.teatime.helpers.MiscHelper;
 import rocky.teatime.helpers.SettingsHelper;
 
@@ -35,19 +37,6 @@ public class TeaBasicsFragment extends Fragment {
     private Tea teaBeingViewed;
     private BrewTeaViewFragment brewingFragment;
     private View selfReferenceView;
-
-    // A Set of integers that communicates the size of the image object for each screen size
-    private static int XL_SCREEN_IMAGE_HEIGHT = 480;
-
-    /**
-     * Returns the image height used for the given screen size. This is so we know how big to make
-     * the image. For now, this simply returns the size used on a 5.5 inch screen.
-     * @return Image height used on the user's choice of phone screen
-     */
-    public static int getImageHeight() {
-        // TODO: Upon testing on other screen sizes, build into a case statement
-        return XL_SCREEN_IMAGE_HEIGHT;
-    }
 
     /**
      * This is a factory method meant to quickly establish the tea_basics fragment
@@ -91,9 +80,18 @@ public class TeaBasicsFragment extends Fragment {
      */
     public void setPicture() {
         String imageLocation = teaBeingViewed.getPicLocation();
-        if (!imageLocation.equals("NULL")) {
-            ImageView imageView = (ImageView) selfReferenceView.findViewById(R.id.collapsing_tea_image);
+        ImageView imageView = (ImageView) selfReferenceView.findViewById(R.id.collapsing_tea_image);
+
+        if (!imageLocation.equals("NULL") && teaBeingViewed.isInStock()) {
             imageView.setImageBitmap(BitmapFactory.decodeFile(imageLocation));
+        }
+        else if (!imageLocation.equals("NULL")) {   // Implicitly guarantees that the tea is not in stock
+           Bitmap colourImage = BitmapFactory.decodeFile(imageLocation);
+           imageView.setImageBitmap(ImageHelper.colourToGreyScale(colourImage));
+        }
+        else if (!teaBeingViewed.isInStock()) {     // Tea has no image and is not in stock.
+            Bitmap outOfStockImage = BitmapFactory.decodeResource(getResources(), R.drawable.generic_tea_img_out_of_stock);
+            imageView.setImageBitmap(outOfStockImage);      // Actually set the image to be the out of stock image!
         }
     }
 

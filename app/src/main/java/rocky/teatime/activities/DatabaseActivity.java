@@ -1,10 +1,8 @@
 package rocky.teatime.activities;
 
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,10 +18,9 @@ import java.util.Comparator;
 
 import rocky.teatime.R;
 import rocky.teatime.database.DataSource;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.database.visualise.DatabaseVisualiser;
 import rocky.teatime.database.visualise.GridVisualiser;
-import rocky.teatime.helpers.AlertHelper;
 import rocky.teatime.helpers.SettingsHelper;
 
 public class DatabaseActivity extends AppCompatActivity {

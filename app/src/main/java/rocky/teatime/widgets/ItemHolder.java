@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import rocky.teatime.R;
 import rocky.teatime.TeaTime;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 
 /**
  * Again much of the code for this comes from understanding the Timber music player project.
@@ -21,7 +21,6 @@ public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView variety;
     private LinearLayout footer;
     private SquareImageView teaPic;
-    private Tea teaBeingShown;
 
     /**
      * Very basic constructor which sets up the real basics of the view plus assigns the onclick listener

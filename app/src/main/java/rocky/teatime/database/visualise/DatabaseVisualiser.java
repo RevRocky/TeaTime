@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.widgets.ItemHolder;
 
 /**

@@ -17,8 +17,8 @@ import android.widget.Spinner;
 import com.google.gson.Gson;
 
 import rocky.teatime.R;
-import rocky.teatime.database.TeaStuff.JsonTea;
-import rocky.teatime.database.TeaStuff.Tea;
+import rocky.teatime.database.teastuff.JsonTea;
+import rocky.teatime.database.teastuff.Tea;
 import rocky.teatime.exceptions.NotEnoughInfoException;
 import rocky.teatime.helpers.MiscHelper;
 import rocky.teatime.helpers.SettingsHelper;
